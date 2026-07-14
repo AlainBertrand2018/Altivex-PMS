@@ -32,6 +32,34 @@
 }
 
 :root {
+  --background: #ffffff;
+  --foreground: #1a1a2e;
+  --card: #f8f9fa;
+  --card-foreground: #1a1a2e;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a2e;
+  --primary: #4338ca;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #1e293b;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #f1f5f9;
+  --accent-foreground: #1e293b;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #4338ca;
+  --sidebar: #f8f9fa;
+  --sidebar-foreground: #1e293b;
+  --sidebar-accent: #e2e8f0;
+  --sidebar-accent-foreground: #1e293b;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #4338ca;
+}
+
+.dark {
   --background: #0b1120;
   --foreground: oklch(0.95 0.005 270);
   --card: oklch(0.13 0.005 270);
@@ -69,6 +97,9 @@ body {
   font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.dark body {
   background-image:
     radial-gradient(ellipse at 15% 10%, rgba(0, 128, 128, 0.08) 0%, transparent 50%),
     radial-gradient(ellipse at 85% 80%, rgba(0, 100, 180, 0.06) 0%, transparent 50%),
@@ -76,7 +107,22 @@ body {
   background-attachment: fixed;
 }
 
+.light body {
+  background-image:
+    radial-gradient(ellipse at 15% 10%, rgba(67, 56, 202, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 80%, rgba(99, 102, 241, 0.04) 0%, transparent 50%),
+    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+  background-attachment: fixed;
+}
+
 .bg-grid {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.dark .bg-grid {
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
@@ -85,6 +131,13 @@ body {
 
 /* Glass morphism utility */
 .glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dark .glass {
   background: rgba(13, 21, 38, 0.65);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);

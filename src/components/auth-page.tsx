@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import ThemeToggle from "./layout/theme-toggle";
 
 export default function AuthPage() {
   const { login, isAuthenticated, isLoading } = useAuth();
@@ -40,6 +41,10 @@ export default function AuthPage() {
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[150px]" />
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/3 blur-[120px]" />
+      </div>
+
+      <div className="absolute top-6 right-6 z-20 animate-fade-in">
+        <ThemeToggle />
       </div>
 
       <div className="relative z-10 w-full max-w-md px-6 animate-fade-in">

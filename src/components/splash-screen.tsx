@@ -4,6 +4,7 @@ import React from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import ThemeToggle from "./layout/theme-toggle";
 
 export default function SplashScreen() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -72,6 +73,10 @@ export default function SplashScreen() {
             Sign In
           </button>
         </div>
+      </div>
+
+      <div className={`absolute top-6 right-6 z-20 transition-all duration-700 delay-1000 ${phase === "entering" ? "opacity-100" : "opacity-0"}`}>
+        <ThemeToggle />
       </div>
 
       <div className={`absolute bottom-8 left-0 right-0 text-center transition-all duration-700 delay-1000 ${phase === "entering" ? "opacity-100" : "opacity-0"}`}>
