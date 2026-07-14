@@ -17,7 +17,6 @@ import {
   LogOut,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
-import Image from "next/image";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -38,12 +37,10 @@ export default function Sidebar() {
     <aside className="fixed left-0 top-0 bottom-0 w-64 bg-sidebar border-r border-sidebar-border flex flex-col z-40">
       <div className="p-5 border-b border-sidebar-border">
         <div className="flex items-center gap-3">
-          <Image
+          <img
             src="/images/golden_heavy_logo.webp"
             alt="Altivex"
-            width={40}
-            height={40}
-            className="object-contain"
+            className="w-10 h-10 object-contain"
           />
           <div>
             <h1 className="text-sm font-medium tracking-[0.1em] text-foreground">ALTIVEX</h1>

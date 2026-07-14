@@ -4,7 +4,6 @@ import React from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 
 export default function SplashScreen() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -46,13 +45,10 @@ export default function SplashScreen() {
 
       <div className="relative z-10 flex flex-col items-center gap-6">
         <div className={`transition-all duration-1000 ease-out ${phase === "entering" ? "opacity-100 scale-100" : "opacity-0 scale-90"}`}>
-          <Image
+          <img
             src="/images/golden_heavy_logo.webp"
             alt="Altivex Logo"
-            width={220}
-            height={220}
-            className="object-contain drop-shadow-[0_0_40px_rgba(212,175,55,0.15)]"
-            priority
+            className="w-[220px] h-[220px] object-contain drop-shadow-[0_0_40px_rgba(212,175,55,0.15)]"
           />
         </div>
 

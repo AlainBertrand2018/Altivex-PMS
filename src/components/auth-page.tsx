@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import Image from "next/image";
 
 export default function AuthPage() {
   const { login, isAuthenticated, isLoading } = useAuth();
@@ -45,13 +44,10 @@ export default function AuthPage() {
 
       <div className="relative z-10 w-full max-w-md px-6 animate-fade-in">
         <div className="flex flex-col items-center mb-8">
-          <Image
+          <img
             src="/images/golden_heavy_logo.webp"
             alt="Altivex Logo"
-            width={120}
-            height={120}
-            className="object-contain mb-4"
-            priority
+            className="w-[120px] h-[120px] object-contain mb-4"
           />
           <h1 className="text-2xl font-light tracking-[0.12em] text-foreground">ALTIVEX</h1>
           <p className="text-muted-foreground text-sm mt-1">Project Intelligence Operating System</p>
