@@ -15,9 +15,12 @@ import {
   Brain,
   Settings,
   LogOut,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import ThemeToggle from "./theme-toggle";
+import { useSidebar } from "./sidebar-context";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -33,67 +36,102 @@ const navItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const { collapsed, toggle } = useSidebar();
 
   return (
-    <aside className="fixed left-0 top-0 bottom-0 w-64 bg-sidebar/95 backdrop-blur-xl border-r border-white/[0.04] flex flex-col z-40">
-      <div className="p-5 border-b border-white/[0.04]">
-        <div className="flex items-center gap-3">
+    <aside
+      className={cn(
+        "fixed left-0 top-0 bottom-0 bg-sidebar/95 backdrop-blur-xl border-r border-border/50 flex flex-col z-40 transition-all duration-300 ease-in-out",
+        collapsed ? "w-[68px]" : "w-64"
+      )}
+    >
+      {/* Header */}
+      <div className={cn("border-b border-border/50 flex items-center", collapsed ? "p-3 justify-center" : "p-5")}>
+        {collapsed ? (
           <img
             src="/images/golden_heavy_logo.webp"
             alt="Altivex"
-            className="w-10 h-10 object-contain"
+            className="w-9 h-9 object-contain"
           />
-          <div>
-            <h1 className="text-sm font-medium tracking-[0.1em] text-foreground">ALTIVEX</h1>
-            <p className="text-[10px] text-muted-foreground/50 tracking-wider">Project Intelligence OS</p>
+        ) : (
+          <div className="flex items-center gap-3 flex-1">
+            <img
+              src="/images/golden_heavy_logo.webp"
+              alt="Altivex"
+              className="w-10 h-10 object-contain"
+            />
+            <div className="flex-1">
+              <h1 className="text-sm font-medium tracking-[0.1em] text-foreground">ALTIVEX</h1>
+              <p className="text-[10px] text-muted-foreground/50 tracking-wider">Project Intelligence OS</p>
+            </div>
           </div>
-        </div>
+        )}
+        <button
+          onClick={toggle}
+          className={cn(
+            "p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors",
+            collapsed ? "mt-0" : ""
+          )}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {collapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+        </button>
       </div>
 
-      <nav className="flex-1 py-3 px-3 space-y-1 overflow-y-auto">
+      {/* Navigation */}
+      <nav className="flex-1 py-3 px-2 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
           return (
             <Link
               key={item.href}
               href={item.href}
+              title={collapsed ? item.label : undefined}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all",
+                "flex items-center gap-3 rounded-lg text-sm transition-all",
+                collapsed ? "px-0 py-2.5 justify-center" : "px-3 py-2.5",
                 isActive
                   ? "bg-primary/10 text-primary border border-primary/10"
-                  : "text-muted-foreground/60 hover:bg-white/[0.03] hover:text-foreground"
+                  : "text-muted-foreground/60 hover:bg-accent hover:text-foreground"
               )}
             >
-              <item.icon className={cn("w-4 h-4", isActive && "text-primary")} />
-              {item.label}
+              <item.icon className={cn("w-4 h-4 shrink-0", isActive && "text-primary")} />
+              {!collapsed && <span>{item.label}</span>}
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-3 border-t border-white/[0.04]">
+      {/* Bottom section */}
+      <div className={cn("border-t border-border/50", collapsed ? "p-2" : "p-3")}>
+        {/* Settings */}
         <Link
           href="/settings"
+          title={collapsed ? "Settings" : undefined}
           className={cn(
-            "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all mb-1",
+            "flex items-center gap-3 rounded-lg text-sm transition-all mb-1",
+            collapsed ? "px-0 py-2.5 justify-center" : "px-3 py-2.5",
             pathname === "/settings"
               ? "bg-primary/10 text-primary border border-primary/10"
-              : "text-muted-foreground/60 hover:bg-white/[0.03] hover:text-foreground"
+              : "text-muted-foreground/60 hover:bg-accent hover:text-foreground"
           )}
         >
           <Settings className="w-4 h-4" />
-          Settings
+          {!collapsed && <span>Settings</span>}
         </Link>
 
-        <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg">
-          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-medium">
+        {/* User profile */}
+        <div className={cn("flex items-center gap-3 rounded-lg", collapsed ? "px-0 py-2.5 justify-center" : "px-3 py-2.5")}>
+          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-medium shrink-0">
             {user?.name?.split(" ").map((n) => n[0]).join("")}
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm text-foreground truncate">{user?.name}</p>
-            <p className="text-[10px] text-muted-foreground/40 truncate">{user?.role?.replace(/_/g, " ")}</p>
-          </div>
-          <ThemeToggle />
+          {!collapsed && (
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-foreground truncate">{user?.name}</p>
+              <p className="text-[10px] text-muted-foreground/40 truncate">{user?.role?.replace(/_/g, " ")}</p>
+            </div>
+          )}
+          {!collapsed && <ThemeToggle />}
           <button
             onClick={logout}
             className="text-muted-foreground/40 hover:text-red-400 transition-colors p-1"
@@ -104,13 +142,16 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="px-3 py-3 border-t border-white/[0.04]">
-        <p className="text-[9px] text-muted-foreground/25 text-center leading-tight">
-          © 2025 Alain BERTRAND
-          <br />
-          All Rights Reserved
-        </p>
-      </div>
+      {/* Copyright */}
+      {!collapsed && (
+        <div className="px-3 py-3 border-t border-border/50">
+          <p className="text-[9px] text-muted-foreground/25 text-center leading-tight">
+            © 2025 Alain BERTRAND
+            <br />
+            All Rights Reserved
+          </p>
+        </div>
+      )}
     </aside>
   );
 }

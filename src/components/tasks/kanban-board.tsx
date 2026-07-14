@@ -29,56 +29,78 @@ const statusConfig: Record<TaskStatus, {
   colBg: string;
   cardBorder: string;
   cardBg: string;
+  cardBgDark: string;
   badge: string;
+  badgeDark: string;
   glow: string;
 }> = {
   todo: {
     label: "To Do",
-    dot: "bg-slate-400",
-    colBorder: "border-slate-400/20",
-    colBg: "bg-slate-500/[0.03]",
-    cardBorder: "border-l-slate-400",
-    cardBg: "bg-slate-500/[0.04]",
-    badge: "bg-slate-400/10 text-slate-400 border-slate-400/20",
-    glow: "shadow-slate-400/5",
+    dot: "bg-slate-400 dark:bg-slate-400",
+    colBorder: "border-slate-300 dark:border-slate-400/20",
+    colBg: "bg-slate-100/80 dark:bg-slate-500/[0.03]",
+    cardBorder: "border-l-slate-400 dark:border-l-slate-400",
+    cardBg: "bg-white dark:bg-slate-500/[0.04]",
+    cardBgDark: "dark:bg-slate-500/[0.04]",
+    badge: "bg-slate-100 text-slate-600 border-slate-200",
+    badgeDark: "dark:bg-slate-400/10 dark:text-slate-400 dark:border-slate-400/20",
+    glow: "shadow-slate-400/5 dark:shadow-slate-400/5",
   },
   in_progress: {
     label: "In Progress",
-    dot: "bg-blue-500",
-    colBorder: "border-blue-500/20",
-    colBg: "bg-blue-500/[0.03]",
-    cardBorder: "border-l-blue-500",
-    cardBg: "bg-blue-500/[0.04]",
-    badge: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    glow: "shadow-blue-500/5",
+    dot: "bg-blue-500 dark:bg-blue-500",
+    colBorder: "border-blue-200 dark:border-blue-500/20",
+    colBg: "bg-blue-50/80 dark:bg-blue-500/[0.03]",
+    cardBorder: "border-l-blue-500 dark:border-l-blue-500",
+    cardBg: "bg-white dark:bg-blue-500/[0.04]",
+    cardBgDark: "dark:bg-blue-500/[0.04]",
+    badge: "bg-blue-100 text-blue-600 border-blue-200",
+    badgeDark: "dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20",
+    glow: "shadow-blue-500/5 dark:shadow-blue-500/5",
   },
   review: {
     label: "Review",
-    dot: "bg-amber-500",
-    colBorder: "border-amber-500/20",
-    colBg: "bg-amber-500/[0.03]",
-    cardBorder: "border-l-amber-500",
-    cardBg: "bg-amber-500/[0.04]",
-    badge: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    glow: "shadow-amber-500/5",
+    dot: "bg-amber-500 dark:bg-amber-500",
+    colBorder: "border-amber-200 dark:border-amber-500/20",
+    colBg: "bg-amber-50/80 dark:bg-amber-500/[0.03]",
+    cardBorder: "border-l-amber-500 dark:border-l-amber-500",
+    cardBg: "bg-white dark:bg-amber-500/[0.04]",
+    cardBgDark: "dark:bg-amber-500/[0.04]",
+    badge: "bg-amber-100 text-amber-600 border-amber-200",
+    badgeDark: "dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20",
+    glow: "shadow-amber-500/5 dark:shadow-amber-500/5",
   },
   done: {
     label: "Done",
-    dot: "bg-emerald-500",
-    colBorder: "border-emerald-500/20",
-    colBg: "bg-emerald-500/[0.03]",
-    cardBorder: "border-l-emerald-500",
-    cardBg: "bg-emerald-500/[0.04]",
-    badge: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    glow: "shadow-emerald-500/5",
+    dot: "bg-emerald-500 dark:bg-emerald-500",
+    colBorder: "border-emerald-200 dark:border-emerald-500/20",
+    colBg: "bg-emerald-50/80 dark:bg-emerald-500/[0.03]",
+    cardBorder: "border-l-emerald-500 dark:border-l-emerald-500",
+    cardBg: "bg-white dark:bg-emerald-500/[0.04]",
+    cardBgDark: "dark:bg-emerald-500/[0.04]",
+    badge: "bg-emerald-100 text-emerald-600 border-emerald-200",
+    badgeDark: "dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20",
+    glow: "shadow-emerald-500/5 dark:shadow-emerald-500/5",
   },
 };
 
-const priorityColors: Record<string, string> = {
-  critical: "bg-red-500/10 text-red-400 border-red-500/20",
-  high: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-  medium: "bg-blue-400/10 text-blue-400 border-blue-400/20",
-  low: "bg-slate-400/10 text-slate-400 border-slate-400/20",
+const priorityColors: Record<string, { light: string; dark: string }> = {
+  critical: {
+    light: "bg-red-100 text-red-600 border-red-200",
+    dark: "dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20",
+  },
+  high: {
+    light: "bg-orange-100 text-orange-600 border-orange-200",
+    dark: "dark:bg-orange-500/10 dark:text-orange-400 dark:border-orange-500/20",
+  },
+  medium: {
+    light: "bg-blue-100 text-blue-600 border-blue-200",
+    dark: "dark:bg-blue-400/10 dark:text-blue-400 dark:border-blue-400/20",
+  },
+  low: {
+    light: "bg-slate-100 text-slate-500 border-slate-200",
+    dark: "dark:bg-slate-400/10 dark:text-slate-400 dark:border-slate-400/20",
+  },
 };
 
 interface SortableTaskCardProps {
@@ -91,6 +113,7 @@ function SortableTaskCard({ task, onEdit, onDelete }: SortableTaskCardProps) {
   const { users, projects } = useApp();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
   const status = statusConfig[task.status] || statusConfig.todo;
+  const pColors = priorityColors[task.priority] || priorityColors.medium;
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -106,11 +129,10 @@ function SortableTaskCard({ task, onEdit, onDelete }: SortableTaskCardProps) {
       <div
         className={`
           rounded-xl border-l-[3px] ${status.cardBorder}
-          bg-card/80 backdrop-blur-sm
+          ${status.cardBg} backdrop-blur-sm
           border border-border/50 border-l-transparent
           hover:border-border hover:shadow-lg ${status.glow}
           transition-all cursor-pointer group
-          ${status.cardBg}
         `}
       >
         <div className="p-4 space-y-3">
@@ -137,16 +159,16 @@ function SortableTaskCard({ task, onEdit, onDelete }: SortableTaskCardProps) {
             </div>
           </div>
 
-          <p className="text-xs text-muted-foreground/70 line-clamp-2">{task.description}</p>
+          <p className="text-xs text-muted-foreground line-clamp-2">{task.description}</p>
 
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className={`text-[9px] font-medium ${status.badge}`}>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Badge variant="outline" className={`text-[9px] font-medium ${status.badge} ${status.badgeDark}`}>
               {status.label}
             </Badge>
-            <Badge variant="outline" className={`text-[9px] font-medium ${priorityColors[task.priority] || priorityColors.medium}`}>
+            <Badge variant="outline" className={`text-[9px] font-medium ${pColors.light} ${pColors.dark}`}>
               {task.priority.toUpperCase()}
             </Badge>
-            <span className="text-[10px] text-primary/60 truncate">{project?.name?.split(" ").slice(0, 3).join(" ")}</span>
+            <span className="text-[10px] text-primary/70 truncate">{project?.name?.split(" ").slice(0, 3).join(" ")}</span>
           </div>
 
           <div className="flex items-center justify-between pt-1 border-t border-border/30">
@@ -155,13 +177,13 @@ function SortableTaskCard({ task, onEdit, onDelete }: SortableTaskCardProps) {
                 <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-primary text-[8px] font-medium">
                   {assignee.name?.split(" ").map((n) => n[0]).join("")}
                 </div>
-                <span className="text-[10px] text-muted-foreground/60">{assignee.name?.split(" ")[0]}</span>
+                <span className="text-[10px] text-muted-foreground">{assignee.name?.split(" ")[0]}</span>
               </div>
             ) : (
               <div />
             )}
             {task.dueDate && (
-              <div className="flex items-center gap-1 text-[10px] text-muted-foreground/50">
+              <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                 <Calendar className="w-3 h-3" />
                 {new Date(task.dueDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
               </div>
@@ -176,6 +198,7 @@ function SortableTaskCard({ task, onEdit, onDelete }: SortableTaskCardProps) {
 function OverlayCard({ task }: { task: Task }) {
   const { users, projects } = useApp();
   const status = statusConfig[task.status] || statusConfig.todo;
+  const pColors = priorityColors[task.priority] || priorityColors.medium;
   const assignee = users.find((u) => u.id === task.assignedTo);
   const project = projects.find((p) => p.id === task.projectId);
 
@@ -188,15 +211,15 @@ function OverlayCard({ task }: { task: Task }) {
     `}>
       <div className="p-4 space-y-3">
         <h4 className="text-sm font-medium text-foreground leading-tight">{task.title}</h4>
-        <p className="text-xs text-muted-foreground/70 line-clamp-2">{task.description}</p>
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" className={`text-[9px] font-medium ${status.badge}`}>
+        <p className="text-xs text-muted-foreground line-clamp-2">{task.description}</p>
+        <div className="flex items-center gap-2 flex-wrap">
+          <Badge variant="outline" className={`text-[9px] font-medium ${status.badge} ${status.badgeDark}`}>
             {status.label}
           </Badge>
-          <Badge variant="outline" className={`text-[9px] font-medium ${priorityColors[task.priority] || priorityColors.medium}`}>
+          <Badge variant="outline" className={`text-[9px] font-medium ${pColors.light} ${pColors.dark}`}>
             {task.priority.toUpperCase()}
           </Badge>
-          <span className="text-[10px] text-primary/60">{project?.name?.split(" ").slice(0, 3).join(" ")}</span>
+          <span className="text-[10px] text-primary/70">{project?.name?.split(" ").slice(0, 3).join(" ")}</span>
         </div>
         <div className="flex items-center justify-between pt-1 border-t border-border/30">
           {assignee && (
@@ -204,11 +227,11 @@ function OverlayCard({ task }: { task: Task }) {
               <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-primary text-[8px] font-medium">
                 {assignee.name?.split(" ").map((n) => n[0]).join("")}
               </div>
-              <span className="text-[10px] text-muted-foreground/60">{assignee.name?.split(" ")[0]}</span>
+              <span className="text-[10px] text-muted-foreground">{assignee.name?.split(" ")[0]}</span>
             </div>
           )}
           {task.dueDate && (
-            <div className="flex items-center gap-1 text-[10px] text-muted-foreground/50">
+            <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
               <Calendar className="w-3 h-3" />
               {new Date(task.dueDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
             </div>
@@ -276,7 +299,7 @@ export default function KanbanBoard({ onCreateTask, onEditTask }: KanbanBoardPro
                 <div className="flex items-center gap-2">
                   <div className={`w-2.5 h-2.5 rounded-full ${cfg.dot}`} />
                   <span className="text-sm font-medium text-foreground">{cfg.label}</span>
-                  <span className="text-xs text-muted-foreground/50">({columnTasks.length})</span>
+                  <span className="text-xs text-muted-foreground">({columnTasks.length})</span>
                 </div>
                 {statusId === "todo" && (
                   <button
