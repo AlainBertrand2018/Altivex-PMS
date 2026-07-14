@@ -25,7 +25,7 @@ export default function SplashScreen() {
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-background bg-grid">
         <div className="animate-pulse-glow text-primary text-2xl font-light tracking-widest">
           ALTIVEX
         </div>
@@ -36,7 +36,7 @@ export default function SplashScreen() {
   if (isAuthenticated) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background bg-grid">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[150px]" />
         <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-primary/3 blur-[100px]" />

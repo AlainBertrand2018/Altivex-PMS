@@ -36,7 +36,7 @@ export default function AuthPage() {
   if (isLoading || isAuthenticated) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background bg-grid">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[150px]" />
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/3 blur-[120px]" />

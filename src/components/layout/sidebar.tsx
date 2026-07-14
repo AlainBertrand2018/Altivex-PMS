@@ -34,8 +34,8 @@ export default function Sidebar() {
   const { user, logout } = useAuth();
 
   return (
-    <aside className="fixed left-0 top-0 bottom-0 w-64 bg-sidebar border-r border-sidebar-border flex flex-col z-40">
-      <div className="p-5 border-b border-sidebar-border">
+    <aside className="fixed left-0 top-0 bottom-0 w-64 bg-[#0a0f1e]/95 backdrop-blur-xl border-r border-white/[0.04] flex flex-col z-40">
+      <div className="p-5 border-b border-white/[0.04]">
         <div className="flex items-center gap-3">
           <img
             src="/images/golden_heavy_logo.webp"
@@ -44,7 +44,7 @@ export default function Sidebar() {
           />
           <div>
             <h1 className="text-sm font-medium tracking-[0.1em] text-foreground">ALTIVEX</h1>
-            <p className="text-[10px] text-muted-foreground tracking-wider">Project Intelligence OS</p>
+            <p className="text-[10px] text-muted-foreground/50 tracking-wider">Project Intelligence OS</p>
           </div>
         </div>
       </div>
@@ -59,8 +59,8 @@ export default function Sidebar() {
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all",
                 isActive
-                  ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                  ? "bg-primary/10 text-primary border border-primary/10"
+                  : "text-muted-foreground/60 hover:bg-white/[0.03] hover:text-foreground"
               )}
             >
               <item.icon className={cn("w-4 h-4", isActive && "text-primary")} />
@@ -70,14 +70,14 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="p-3 border-t border-sidebar-border">
+      <div className="p-3 border-t border-white/[0.04]">
         <Link
           href="/settings"
           className={cn(
             "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all mb-1",
             pathname === "/settings"
-              ? "bg-sidebar-accent text-sidebar-accent-foreground"
-              : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+              ? "bg-primary/10 text-primary border border-primary/10"
+              : "text-muted-foreground/60 hover:bg-white/[0.03] hover:text-foreground"
           )}
         >
           <Settings className="w-4 h-4" />
@@ -90,11 +90,11 @@ export default function Sidebar() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm text-foreground truncate">{user?.name}</p>
-            <p className="text-[10px] text-muted-foreground truncate">{user?.role?.replace(/_/g, " ")}</p>
+            <p className="text-[10px] text-muted-foreground/40 truncate">{user?.role?.replace(/_/g, " ")}</p>
           </div>
           <button
             onClick={logout}
-            className="text-muted-foreground hover:text-destructive transition-colors p-1"
+            className="text-muted-foreground/40 hover:text-red-400 transition-colors p-1"
             title="Sign out"
           >
             <LogOut className="w-4 h-4" />
@@ -102,8 +102,8 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="px-3 py-3 border-t border-sidebar-border">
-        <p className="text-[9px] text-muted-foreground/40 text-center leading-tight">
+      <div className="px-3 py-3 border-t border-white/[0.04]">
+        <p className="text-[9px] text-muted-foreground/25 text-center leading-tight">
           © 2025 Alain BERTRAND
           <br />
           All Rights Reserved
