@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Image from "next/image";
 
 export default function AuthPage() {
   const { login, isAuthenticated, isLoading } = useAuth();
@@ -36,18 +37,24 @@ export default function AuthPage() {
   if (isLoading || isAuthenticated) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[150px]" />
+        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/3 blur-[120px]" />
       </div>
 
       <div className="relative z-10 w-full max-w-md px-6 animate-fade-in">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30 mb-4">
-            <span className="text-primary font-bold text-xl">A</span>
-          </div>
-          <h1 className="text-2xl font-light tracking-[0.15em] text-foreground">ALTIVEX</h1>
-          <p className="text-muted-foreground text-sm mt-1">Project Intelligence OS</p>
+          <Image
+            src="/images/golden_heavy_logo.webp"
+            alt="Altivex Logo"
+            width={120}
+            height={120}
+            className="object-contain mb-4"
+            priority
+          />
+          <h1 className="text-2xl font-light tracking-[0.12em] text-foreground">ALTIVEX</h1>
+          <p className="text-muted-foreground text-sm mt-1">Project Intelligence Operating System</p>
         </div>
 
         <div className="glass rounded-2xl p-8">
@@ -97,6 +104,12 @@ export default function AuthPage() {
             </p>
           </div>
         </div>
+      </div>
+
+      <div className="absolute bottom-8 left-0 right-0 text-center">
+        <p className="text-muted-foreground/40 text-xs tracking-wider">
+          © 2025 Alain BERTRAND • All Rights Reserved. • Created for ALTIVEX Projects
+        </p>
       </div>
     </div>
   );

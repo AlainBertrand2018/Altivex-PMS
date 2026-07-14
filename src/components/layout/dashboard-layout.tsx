@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Sidebar from "./sidebar";
+import Image from "next/image";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -27,11 +28,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!isAuthenticated) return null;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Sidebar />
-      <main className="ml-64 min-h-screen">
-        <div className="p-8">{children}</div>
+      <main className="ml-64 min-h-screen flex-1">
+        <div className="p-8 pb-16">{children}</div>
       </main>
+      <footer className="ml-64 border-t border-border/30 bg-background/80 backdrop-blur-sm">
+        <div className="px-8 py-4 text-center">
+          <p className="text-muted-foreground/40 text-xs tracking-wider">
+            © 2025 Alain BERTRAND • All Rights Reserved. • Created for ALTIVEX Projects
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

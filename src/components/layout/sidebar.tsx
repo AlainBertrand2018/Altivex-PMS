@@ -17,6 +17,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import Image from "next/image";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -37,12 +38,16 @@ export default function Sidebar() {
     <aside className="fixed left-0 top-0 bottom-0 w-64 bg-sidebar border-r border-sidebar-border flex flex-col z-40">
       <div className="p-5 border-b border-sidebar-border">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/30">
-            <span className="text-primary font-bold text-sm">A</span>
-          </div>
+          <Image
+            src="/images/golden_heavy_logo.webp"
+            alt="Altivex"
+            width={40}
+            height={40}
+            className="object-contain"
+          />
           <div>
-            <h1 className="text-sm font-medium tracking-[0.12em] text-foreground">ALTIVEX</h1>
-            <p className="text-[10px] text-muted-foreground tracking-wider">PMS</p>
+            <h1 className="text-sm font-medium tracking-[0.1em] text-foreground">ALTIVEX</h1>
+            <p className="text-[10px] text-muted-foreground tracking-wider">Project Intelligence OS</p>
           </div>
         </div>
       </div>
@@ -98,6 +103,14 @@ export default function Sidebar() {
             <LogOut className="w-4 h-4" />
           </button>
         </div>
+      </div>
+
+      <div className="px-3 py-3 border-t border-sidebar-border">
+        <p className="text-[9px] text-muted-foreground/40 text-center leading-tight">
+          © 2025 Alain BERTRAND
+          <br />
+          All Rights Reserved
+        </p>
       </div>
     </aside>
   );
