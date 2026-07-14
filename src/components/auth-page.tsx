@@ -61,7 +61,7 @@ export default function AuthPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="amara.okafor@altivex.com"
+                placeholder="demo@mymail.com"
                 className="w-full px-4 py-3 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
                 required
               />
@@ -73,7 +73,7 @@ export default function AuthPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="any password works"
+                placeholder="DEMO2026"
                 className="w-full px-4 py-3 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
                 required
               />
@@ -96,7 +96,7 @@ export default function AuthPage() {
 
           <div className="mt-6 pt-4 border-t border-border/50">
             <p className="text-muted-foreground/50 text-xs text-center">
-              Demo: Use any mock user email (e.g., amara.okafor@altivex.com)
+              Demo: demo@mymail.com / DEMO2026
             </p>
           </div>
         </div>

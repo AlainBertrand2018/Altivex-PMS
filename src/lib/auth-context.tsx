@@ -62,15 +62,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, [user, resetTimer]);
 
-  const login = async (email: string, _password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<boolean> => {
+    const DEMO_CREDENTIALS = { email: "demo@mymail.com", password: "DEMO2026" };
     const found = mockUsers.find((u) => u.email === email);
-    if (found) {
-      setUser(found);
-      sessionStorage.setItem("altivex_user", JSON.stringify(found));
-      resetTimer();
-      return true;
-    }
-    return false;
+    if (!found) return false;
+    if (email === DEMO_CREDENTIALS.email && password !== DEMO_CREDENTIALS.password) return false;
+    if (email !== DEMO_CREDENTIALS.email) return false;
+    setUser(found);
+    sessionStorage.setItem("altivex_user", JSON.stringify(found));
+    resetTimer();
+    return true;
   };
 
   const logout = useCallback(() => {
