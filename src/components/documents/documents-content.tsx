@@ -30,11 +30,11 @@ export default function DocumentsContent() {
   const [showForm, setShowForm] = useState(false);
   const [editingDoc, setEditingDoc] = useState<Document | null>(null);
 
-  const handleSubmit = (data: Omit<Document, "id" | "createdAt" | "updatedAt">) => {
+  const handleSubmit = async (data: Omit<Document, "id" | "createdAt" | "updatedAt">) => {
     if (editingDoc) {
-      updateDocument(editingDoc.id, data);
+      await updateDocument(editingDoc.id, data);
     } else {
-      addDocument({
+      await addDocument({
         ...data,
         id: "",
         createdAt: new Date().toISOString(),

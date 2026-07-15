@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import { Meeting, MeetingStatus } from "@/types";
 import { useApp } from "@/lib/app-context";
 
 interface MeetingFormProps {
   meeting?: Meeting | null;
-  onSubmit: (data: Omit<Meeting, "id" | "createdAt" | "updatedAt">) => void;
+  onSubmit: (data: Omit<Meeting, "id" | "createdAt" | "updatedAt">) => Promise<void>;
   onCancel: () => void;
 }
 
@@ -22,9 +23,9 @@ export default function MeetingForm({ meeting, onSubmit, onCancel }: MeetingForm
   const [duration, setDuration] = useState(meeting?.duration?.toString() || "60");
   const [location, setLocation] = useState(meeting?.location || "");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
+    await onSubmit({
       title,
       description,
       projectId,
@@ -36,10 +37,11 @@ export default function MeetingForm({ meeting, onSubmit, onCancel }: MeetingForm
     });
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onCancel}>
-      <div className="glass rounded-2xl p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <h2 className="text-lg font-medium text-foreground mb-6">{meeting ? "Edit Meeting" : "Schedule Meeting"}</h2>
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto" onClick={onCancel}>
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="glass-modal rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto relative z-10" onClick={(e) => e.stopPropagation()}>
+          <h2 className="text-lg font-medium text-foreground mb-6">{meeting ? "Edit Meeting" : "Schedule Meeting"}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Title</label>
@@ -101,7 +103,8 @@ export default function MeetingForm({ meeting, onSubmit, onCancel }: MeetingForm
             </button>
           </div>
         </form>
-      </div>
-    </div>
+        </div>
+    </div>,
+    document.body
   );
 }

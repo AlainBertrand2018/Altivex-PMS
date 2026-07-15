@@ -49,6 +49,25 @@ create table consultants (
   updated_at timestamptz not null default now()
 );
 
+create table projects (
+  id text primary key,
+  name text not null,
+  description text not null default '',
+  status text not null default 'envision',
+  priority text not null default 'medium',
+  committee_id text,
+  owner_id text references users(id),
+  budget_estimated numeric default 0,
+  budget_approved numeric default 0,
+  budget_spent numeric default 0,
+  budget_currency text default 'MUR',
+  timeline_start_date date,
+  timeline_end_date date,
+  tags text[] default '{}',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create table committees (
   id text primary key,
   name text not null,
@@ -60,6 +79,8 @@ create table committees (
   updated_at timestamptz not null default now()
 );
 
+alter table projects add constraint fk_projects_committee foreign key (committee_id) references committees(id);
+
 create table committee_members (
   id text primary key default gen_random_uuid()::text,
   committee_id text not null references committees(id) on delete cascade,
@@ -68,25 +89,6 @@ create table committee_members (
   member_role text not null default 'member',
   joined_at timestamptz not null default now(),
   check (num_nonnulls(user_id, consultant_id) = 1)
-);
-
-create table projects (
-  id text primary key,
-  name text not null,
-  description text not null default '',
-  status text not null default 'envision',
-  priority text not null default 'medium',
-  committee_id text references committees(id),
-  owner_id text references users(id),
-  budget_estimated numeric default 0,
-  budget_approved numeric default 0,
-  budget_spent numeric default 0,
-  budget_currency text default 'MUR',
-  timeline_start_date date,
-  timeline_end_date date,
-  tags text[] default '{}',
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
 );
 
 create table project_phases (
@@ -200,7 +202,7 @@ create table tasks (
   id text primary key,
   project_id text references projects(id) on delete cascade,
   phase_id text references project_phases(id),
-  meeting_id text references meetings(id),
+  meeting_id text,
   assigned_to text references users(id),
   title text not null,
   description text not null default '',
@@ -227,6 +229,8 @@ create table meetings (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table tasks add constraint fk_tasks_meeting foreign key (meeting_id) references meetings(id);
 
 create table meeting_attendees (
   id text primary key default gen_random_uuid()::text,
@@ -414,99 +418,99 @@ alter table cost_items enable row level security;
 alter table invitations enable row level security;
 alter table notification_log enable row level security;
 
-do $$ begin
+do  begin
   create policy "dev_allow_all" on users for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on consultants for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on committees for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on committee_members for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on projects for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on project_phases for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on project_services for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on project_providers for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on service_providers for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on project_providers_delegates for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on project_members for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on stakeholders for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on milestones for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on kpis for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on tasks for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on meetings for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on meeting_attendees for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on meeting_reports for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on decisions for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on documents for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on risks for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on cost_items for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on invitations for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
-do $$ begin
+end ;
+do  begin
   create policy "dev_allow_all" on notification_log for all using (true) with check (true);
 exception when duplicate_object then null;
-end $$;
+end ;

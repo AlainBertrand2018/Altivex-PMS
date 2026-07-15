@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import { Stakeholder, StakeholderCategory, StakeholderInfluence, StakeholderInterest } from "@/types";
 import { useApp } from "@/lib/app-context";
 
 interface StakeholderFormProps {
   stakeholder?: Stakeholder | null;
-  onSubmit: (data: Omit<Stakeholder, "id" | "createdAt" | "updatedAt">) => void;
+  onSubmit: (data: Omit<Stakeholder, "id" | "createdAt" | "updatedAt">) => Promise<void>;
   onCancel: () => void;
 }
 
@@ -22,9 +23,9 @@ export default function StakeholderForm({ stakeholder, onSubmit, onCancel }: Sta
   const [role, setRole] = useState(stakeholder?.role || "");
   const [notes, setNotes] = useState(stakeholder?.notes || "");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
+    await onSubmit({
       userId: userId || undefined,
       name: name || undefined,
       projectId,
@@ -36,10 +37,11 @@ export default function StakeholderForm({ stakeholder, onSubmit, onCancel }: Sta
     });
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onCancel}>
-      <div className="glass rounded-2xl p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <h2 className="text-lg font-medium text-foreground mb-6">{stakeholder ? "Edit Stakeholder" : "Add Stakeholder"}</h2>
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto" onClick={onCancel}>
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="glass-modal rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto relative z-10" onClick={(e) => e.stopPropagation()}>
+          <h2 className="text-lg font-medium text-foreground mb-6">{stakeholder ? "Edit Stakeholder" : "Add Stakeholder"}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -111,7 +113,8 @@ export default function StakeholderForm({ stakeholder, onSubmit, onCancel }: Sta
             </button>
           </div>
         </form>
-      </div>
-    </div>
+        </div>
+    </div>,
+    document.body
   );
 }

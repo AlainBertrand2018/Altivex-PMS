@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { splashContent } from "@/config/splash";
 import ThemeToggle from "./layout/theme-toggle";
 
 export default function AuthPage() {
@@ -29,7 +30,7 @@ export default function AuthPage() {
     if (success) {
       router.push("/dashboard");
     } else {
-      setError("Invalid credentials. Try any of the mock user emails.");
+      setError("Invalid credentials. Please check your email and password.");
     }
     setIsSubmitting(false);
   };
@@ -37,11 +38,23 @@ export default function AuthPage() {
   if (isLoading || isAuthenticated) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background bg-grid">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[150px]" />
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/3 blur-[120px]" />
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background overflow-hidden">
+      {/* Cinematic Background */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-black/60 z-10" />
+        <div
+          className="w-full h-full animate-subtle-zoom bg-cover bg-center"
+          style={{ backgroundImage: `url('${splashContent.background.imageUrl}')` }}
+        />
+        {splashContent.background.enableScanner && (
+          <div className="absolute inset-0 z-20 overflow-hidden opacity-20 pointer-events-none">
+            <div className="splash-scanner-line" />
+          </div>
+        )}
       </div>
+
+      {/* Grid Pattern */}
+      <div className="fixed inset-0 z-10 pointer-events-none opacity-20 splash-grid-overlay" />
 
       <div className="absolute top-6 right-6 z-20 animate-fade-in">
         <ThemeToggle />
@@ -52,13 +65,13 @@ export default function AuthPage() {
           <img
             src="/images/golden_heavy_logo.webp"
             alt="Altivex Logo"
-            className="w-[120px] h-[120px] object-contain mb-4"
+            className="w-[120px] h-[120px] object-contain mb-4 drop-shadow-[0_0_40px_rgba(212,175,55,0.25)]"
           />
           <h1 className="text-2xl font-light tracking-[0.12em] text-foreground">ALTIVEX</h1>
-          <p className="text-muted-foreground text-sm mt-1">Project Intelligence Operating System</p>
+          <p className="text-muted-foreground text-sm mt-1">Intelligent Project Management Platform</p>
         </div>
 
-        <div className="glass rounded-2xl p-8">
+        <div className="glass-modal rounded-2xl p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Email</label>

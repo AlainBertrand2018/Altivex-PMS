@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Task, TaskStatus, TaskPriority } from "@/types";
 import { useApp } from "@/lib/app-context";
 
 interface TaskFormProps {
   task?: Task | null;
-  onSubmit: (data: Omit<Task, "id" | "createdAt" | "updatedAt">) => void;
+  onSubmit: (data: Omit<Task, "id" | "createdAt" | "updatedAt">) => Promise<void>;
   onCancel: () => void;
 }
 
@@ -21,9 +22,9 @@ export default function TaskForm({ task, onSubmit, onCancel }: TaskFormProps) {
   const [priority, setPriority] = useState<TaskPriority>(task?.priority || "medium");
   const [dueDate, setDueDate] = useState(task?.dueDate?.split("T")[0] || "");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
+    await onSubmit({
       title,
       description,
       projectId,
@@ -37,10 +38,11 @@ export default function TaskForm({ task, onSubmit, onCancel }: TaskFormProps) {
     });
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onCancel}>
-      <div className="glass rounded-2xl p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <h2 className="text-lg font-medium text-foreground mb-6">{task ? "Edit Task" : "Create Task"}</h2>
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto" onClick={onCancel}>
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="glass-modal rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto relative z-10" onClick={(e) => e.stopPropagation()}>
+          <h2 className="text-lg font-medium text-foreground mb-6">{task ? "Edit Task" : "Create Task"}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Title</label>
@@ -136,7 +138,8 @@ export default function TaskForm({ task, onSubmit, onCancel }: TaskFormProps) {
             </button>
           </div>
         </form>
-      </div>
-    </div>
+        </div>
+    </div>,
+    document.body
   );
 }

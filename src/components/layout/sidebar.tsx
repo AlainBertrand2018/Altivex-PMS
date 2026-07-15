@@ -31,6 +31,7 @@ const navItems = [
   { href: "/stakeholders", label: "Stakeholders", icon: Users },
   { href: "/documents", label: "Documents", icon: FileText },
   { href: "/intelligence", label: "Intelligence", icon: Brain },
+  { href: "/users", label: "Users", icon: Users },
 ];
 
 export default function Sidebar() {

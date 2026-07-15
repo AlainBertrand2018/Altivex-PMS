@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import { Document, DocumentType } from "@/types";
 import { useApp } from "@/lib/app-context";
 
 interface DocumentFormProps {
   document?: Document | null;
-  onSubmit: (data: Omit<Document, "id" | "createdAt" | "updatedAt">) => void;
+  onSubmit: (data: Omit<Document, "id" | "createdAt" | "updatedAt">) => Promise<void>;
   onCancel: () => void;
 }
 
@@ -20,9 +21,9 @@ export default function DocumentForm({ document: doc, onSubmit, onCancel }: Docu
   const [uploadedBy] = useState(doc?.uploadedBy || "usr_001");
   const [tags, setTags] = useState(doc?.tags?.join(", ") || "");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
+    await onSubmit({
       name,
       type,
       projectId,
@@ -37,10 +38,11 @@ export default function DocumentForm({ document: doc, onSubmit, onCancel }: Docu
     });
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onCancel}>
-      <div className="glass rounded-2xl p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <h2 className="text-lg font-medium text-foreground mb-6">{doc ? "Edit Document" : "Add Document"}</h2>
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto" onClick={onCancel}>
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="glass-modal rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto relative z-10" onClick={(e) => e.stopPropagation()}>
+          <h2 className="text-lg font-medium text-foreground mb-6">{doc ? "Edit Document" : "Add Document"}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Document Name</label>
@@ -92,7 +94,8 @@ export default function DocumentForm({ document: doc, onSubmit, onCancel }: Docu
             </button>
           </div>
         </form>
-      </div>
-    </div>
+        </div>
+    </div>,
+    document.body
   );
 }

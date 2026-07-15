@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import { Decision, DecisionStatus, DecisionImpact } from "@/types";
 import { useApp } from "@/lib/app-context";
 
 interface DecisionFormProps {
   decision?: Decision | null;
-  onSubmit: (data: Omit<Decision, "id" | "createdAt" | "updatedAt">) => void;
+  onSubmit: (data: Omit<Decision, "id" | "createdAt" | "updatedAt">) => Promise<void>;
   onCancel: () => void;
 }
 
@@ -20,6 +21,7 @@ export default function DecisionForm({ decision, onSubmit, onCancel }: DecisionF
   const [status, setStatus] = useState<DecisionStatus>(decision?.status || "proposed");
   const [impact, setImpact] = useState<DecisionImpact>(decision?.impact || "medium");
   const [rationale, setRationale] = useState(decision?.rationale || "");
+  const [consequences, setConsequences] = useState(decision?.consequences || "");
   const [decidedBy, setDecidedBy] = useState<string[]>(decision?.decidedBy || []);
 
   const toggleDecider = (userId: string) => {
@@ -28,9 +30,9 @@ export default function DecisionForm({ decision, onSubmit, onCancel }: DecisionF
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
+    await onSubmit({
       title,
       description,
       projectId,
@@ -39,15 +41,17 @@ export default function DecisionForm({ decision, onSubmit, onCancel }: DecisionF
       status,
       impact,
       rationale: rationale || undefined,
+      consequences: consequences || undefined,
       actionItemIds: decision?.actionItemIds || [],
       decidedAt: decision?.decidedAt || new Date().toISOString(),
     });
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onCancel}>
-      <div className="glass rounded-2xl p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <h2 className="text-lg font-medium text-foreground mb-6">{decision ? "Edit Decision" : "Record Decision"}</h2>
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto" onClick={onCancel}>
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="glass-modal rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto relative z-10" onClick={(e) => e.stopPropagation()}>
+          <h2 className="text-lg font-medium text-foreground mb-6">{decision ? "Edit Decision" : "Record Decision"}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Title</label>
@@ -91,6 +95,7 @@ export default function DecisionForm({ decision, onSubmit, onCancel }: DecisionF
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Impact</label>
               <select value={impact} onChange={(e) => setImpact(e.target.value as DecisionImpact)} className="w-full px-4 py-2.5 rounded-lg bg-background border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50">
+                <option value="critical">Critical</option>
                 <option value="high">High</option>
                 <option value="medium">Medium</option>
                 <option value="low">Low</option>
@@ -100,6 +105,10 @@ export default function DecisionForm({ decision, onSubmit, onCancel }: DecisionF
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Rationale</label>
             <textarea value={rationale} onChange={(e) => setRationale(e.target.value)} placeholder="Why was this decision made?" className="w-full px-4 py-2.5 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 min-h-[60px] resize-none" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Consequences</label>
+            <textarea value={consequences} onChange={(e) => setConsequences(e.target.value)} placeholder="Expected outcomes (one per line)" className="w-full px-4 py-2.5 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 min-h-[60px] resize-none" />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Decided By</label>
@@ -129,7 +138,8 @@ export default function DecisionForm({ decision, onSubmit, onCancel }: DecisionF
             </button>
           </div>
         </form>
-      </div>
-    </div>
+        </div>
+    </div>,
+    document.body
   );
 }

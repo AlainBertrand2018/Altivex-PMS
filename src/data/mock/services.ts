@@ -1,10 +1,3 @@
 import { ProjectService } from "@/types";
 
-export const mockProjectServices: ProjectService[] = [
-  { id: "srv_001", projectId: "prj_001", phaseId: "ph_002", name: "Venue Security", description: "Full security coverage for studio — perimeter, crowd control, VIP protection", category: "security", status: "contracted", estimatedCost: 1800000, actualCost: 1650000, currency: "MUR", createdAt: "2025-06-01T08:00:00Z", updatedAt: "2025-09-01T08:00:00Z" },
-  { id: "srv_002", projectId: "prj_001", phaseId: "ph_002", name: "Crew Catering", description: "Daily catering for production crew — 40-60 staff per shoot day", category: "catering", status: "contracted", estimatedCost: 2400000, actualCost: 800000, currency: "MUR", createdAt: "2025-06-01T08:00:00Z", updatedAt: "2025-09-01T08:00:00Z" },
-  { id: "srv_003", projectId: "prj_001", phaseId: "ph_002", name: "Broadcast AV & Lighting", description: "Studio lighting rigs, camera equipment, and live broadcast support", category: "technical", status: "contracted", estimatedCost: 3200000, actualCost: 2900000, currency: "MUR", createdAt: "2025-06-01T08:00:00Z", updatedAt: "2025-09-01T08:00:00Z" },
-  { id: "srv_004", projectId: "prj_002", phaseId: "ph_005", name: "Competition Venue Catering", description: "3-day competition catering for participants, jury, and public", category: "catering", status: "quoted", estimatedCost: 900000, actualCost: 0, currency: "MUR", createdAt: "2025-08-15T08:00:00Z", updatedAt: "2025-12-01T08:00:00Z" },
-  { id: "srv_005", projectId: "prj_002", phaseId: "ph_005", name: "Exhibition Security", description: "Security for 3-day public exhibition at Eureka House", category: "security", status: "identified", estimatedCost: 450000, actualCost: 0, currency: "MUR", createdAt: "2025-08-15T08:00:00Z", updatedAt: "2025-08-15T08:00:00Z" },
-  { id: "srv_006", projectId: "prj_003", phaseId: "ph_008", name: "Audit & Certification Staff", description: "Field auditors for pilot establishment assessments", category: "logistical", status: "identified", estimatedCost: 500000, actualCost: 0, currency: "MUR", createdAt: "2025-05-01T08:00:00Z", updatedAt: "2025-05-01T08:00:00Z" },
-];
+export const mockProjectServices: ProjectService[] = [];

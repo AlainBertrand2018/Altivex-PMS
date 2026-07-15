@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import { Project, ProjectStatus, ProjectPriority } from "@/types";
 import { useApp } from "@/lib/app-context";
 
 interface ProjectFormProps {
   project?: Project | null;
-  onSubmit: (data: Omit<Project, "id" | "createdAt" | "updatedAt">) => void;
+  onSubmit: (data: Omit<Project, "id" | "createdAt" | "updatedAt">) => Promise<void>;
   onCancel: () => void;
 }
 
@@ -25,9 +26,9 @@ export default function ProjectForm({ project, onSubmit, onCancel }: ProjectForm
   const [startDate, setStartDate] = useState(project?.timelineStartDate || "");
   const [endDate, setEndDate] = useState(project?.timelineEndDate || "");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
+    await onSubmit({
       name,
       description,
       status,
@@ -44,10 +45,11 @@ export default function ProjectForm({ project, onSubmit, onCancel }: ProjectForm
     });
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onCancel}>
-      <div className="glass rounded-2xl p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <h2 className="text-lg font-medium text-foreground mb-6">{project ? "Edit Project" : "Create Project"}</h2>
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto" onClick={onCancel}>
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="glass-modal rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto relative z-10" onClick={(e) => e.stopPropagation()}>
+          <h2 className="text-lg font-medium text-foreground mb-6">{project ? "Edit Project" : "Create Project"}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Project Name</label>
@@ -149,7 +151,8 @@ export default function ProjectForm({ project, onSubmit, onCancel }: ProjectForm
             </button>
           </div>
         </form>
-      </div>
-    </div>
+        </div>
+    </div>,
+    document.body
   );
 }

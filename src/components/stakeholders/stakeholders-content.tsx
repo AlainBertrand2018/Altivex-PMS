@@ -28,11 +28,11 @@ export default function StakeholdersContent() {
   const [showForm, setShowForm] = useState(false);
   const [editingStakeholder, setEditingStakeholder] = useState<Stakeholder | null>(null);
 
-  const handleSubmit = (data: Omit<Stakeholder, "id" | "createdAt" | "updatedAt">) => {
+  const handleSubmit = async (data: Omit<Stakeholder, "id" | "createdAt" | "updatedAt">) => {
     if (editingStakeholder) {
-      updateStakeholder(editingStakeholder.id, data);
+      await updateStakeholder(editingStakeholder.id, data);
     } else {
-      addStakeholder({
+      await addStakeholder({
         ...data,
         id: "",
         createdAt: new Date().toISOString(),

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import {
   User,
   Consultant,
@@ -22,29 +22,9 @@ import {
   ProjectService,
   CostItem,
   NotificationLog,
+  Invitation,
 } from "@/types";
-import {
-  mockUsers,
-  mockConsultants,
-  mockProjects,
-  mockProjectPhases,
-  mockCommittees,
-  mockCommitteeMembers,
-  mockMeetings,
-  mockMeetingAttendees,
-  mockMeetingReports,
-  mockTasks,
-  mockDecisions,
-  mockStakeholders,
-  mockDocuments,
-  mockRisks,
-  mockMilestones,
-  mockKPIs,
-  mockProjectProviders,
-  mockProjectServices,
-  mockCostItems,
-  mockNotifications,
-} from "@/data/mock";
+import { db, generateId } from "@/lib/db";
 
 interface AppState {
   users: User[];
@@ -67,132 +47,291 @@ interface AppState {
   projectServices: ProjectService[];
   costItems: CostItem[];
   notifications: NotificationLog[];
+  invitations: Invitation[];
+  loading: boolean;
 }
 
 interface AppContextType extends AppState {
-  addProject: (p: Project) => void;
-  updateProject: (id: string, data: Partial<Project>) => void;
-  deleteProject: (id: string) => void;
-  addTask: (t: Task) => void;
-  updateTask: (id: string, data: Partial<Task>) => void;
-  deleteTask: (id: string) => void;
-  moveTask: (id: string, status: Task["status"]) => void;
-  addMeeting: (m: Meeting) => void;
-  updateMeeting: (id: string, data: Partial<Meeting>) => void;
-  deleteMeeting: (id: string) => void;
-  addDecision: (d: Decision) => void;
-  updateDecision: (id: string, data: Partial<Decision>) => void;
-  deleteDecision: (id: string) => void;
-  addStakeholder: (s: Stakeholder) => void;
-  updateStakeholder: (id: string, data: Partial<Stakeholder>) => void;
-  deleteStakeholder: (id: string) => void;
-  addDocument: (d: Document) => void;
-  updateDocument: (id: string, data: Partial<Document>) => void;
-  deleteDocument: (id: string) => void;
+  addUser: (u: User) => Promise<void>;
+  updateUser: (id: string, data: Partial<User>) => Promise<void>;
+  deleteUser: (id: string) => Promise<void>;
+  addProject: (p: Project) => Promise<void>;
+  updateProject: (id: string, data: Partial<Project>) => Promise<void>;
+  deleteProject: (id: string) => Promise<void>;
+  addTask: (t: Task) => Promise<void>;
+  updateTask: (id: string, data: Partial<Task>) => Promise<void>;
+  deleteTask: (id: string) => Promise<void>;
+  moveTask: (id: string, status: Task["status"]) => Promise<void>;
+  addMeeting: (m: Meeting) => Promise<void>;
+  updateMeeting: (id: string, data: Partial<Meeting>) => Promise<void>;
+  deleteMeeting: (id: string) => Promise<void>;
+  addDecision: (d: Decision) => Promise<void>;
+  updateDecision: (id: string, data: Partial<Decision>) => Promise<void>;
+  deleteDecision: (id: string) => Promise<void>;
+  addStakeholder: (s: Stakeholder) => Promise<void>;
+  updateStakeholder: (id: string, data: Partial<Stakeholder>) => Promise<void>;
+  deleteStakeholder: (id: string) => Promise<void>;
+  addDocument: (d: Document) => Promise<void>;
+  updateDocument: (id: string, data: Partial<Document>) => Promise<void>;
+  deleteDocument: (id: string) => Promise<void>;
+  addInvitation: (i: Invitation) => Promise<void>;
+  updateInvitation: (id: string, data: Partial<Invitation>) => Promise<void>;
+  deleteInvitation: (id: string) => Promise<void>;
+  addKPI: (k: KPI) => Promise<void>;
+  updateKPI: (id: string, data: Partial<KPI>) => Promise<void>;
+  deleteKPI: (id: string) => Promise<void>;
+  refresh: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [users] = useState<User[]>(mockUsers);
-  const [consultants] = useState<Consultant[]>(mockConsultants);
-  const [projects, setProjects] = useState<Project[]>(mockProjects);
-  const [projectPhases] = useState<ProjectPhase[]>(mockProjectPhases);
-  const [committees] = useState<Committee[]>(mockCommittees);
-  const [committeeMembers] = useState<CommitteeMember[]>(mockCommitteeMembers);
-  const [meetings, setMeetings] = useState<Meeting[]>(mockMeetings);
-  const [meetingAttendees] = useState<MeetingAttendee[]>(mockMeetingAttendees);
-  const [meetingReports] = useState<MeetingReport[]>(mockMeetingReports);
-  const [tasks, setTasks] = useState<Task[]>(mockTasks);
-  const [decisions, setDecisions] = useState<Decision[]>(mockDecisions);
-  const [stakeholders, setStakeholders] = useState<Stakeholder[]>(mockStakeholders);
-  const [documents, setDocuments] = useState<Document[]>(mockDocuments);
-  const [risks] = useState<Risk[]>(mockRisks);
-  const [milestones] = useState<Milestone[]>(mockMilestones);
-  const [kpis] = useState<KPI[]>(mockKPIs);
-  const [projectProviders] = useState<ProjectProvider[]>(mockProjectProviders);
-  const [projectServices] = useState<ProjectService[]>(mockProjectServices);
-  const [costItems] = useState<CostItem[]>(mockCostItems);
-  const [notifications] = useState<NotificationLog[]>(mockNotifications);
+  const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState<User[]>([]);
+  const [consultants, setConsultants] = useState<Consultant[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [projectPhases, setProjectPhases] = useState<ProjectPhase[]>([]);
+  const [committees, setCommittees] = useState<Committee[]>([]);
+  const [committeeMembers, setCommitteeMembers] = useState<CommitteeMember[]>([]);
+  const [meetings, setMeetings] = useState<Meeting[]>([]);
+  const [meetingAttendees, setMeetingAttendees] = useState<MeetingAttendee[]>([]);
+  const [meetingReports, setMeetingReports] = useState<MeetingReport[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [decisions, setDecisions] = useState<Decision[]>([]);
+  const [stakeholders, setStakeholders] = useState<Stakeholder[]>([]);
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [risks, setRisks] = useState<Risk[]>([]);
+  const [milestones, setMilestones] = useState<Milestone[]>([]);
+  const [kpis, setKpis] = useState<KPI[]>([]);
+  const [projectProviders, setProjectProviders] = useState<ProjectProvider[]>([]);
+  const [projectServices, setProjectServices] = useState<ProjectService[]>([]);
+  const [costItems, setCostItems] = useState<CostItem[]>([]);
+  const [notifications, setNotifications] = useState<NotificationLog[]>([]);
+  const [invitations, setInvitations] = useState<Invitation[]>([]);
 
-  const generateId = (prefix: string) => `${prefix}_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+  const loadAll = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [
+        u, c, p, pp, cm, cmm, mt, mta, mtr, t, d, s, doc, r, ms, k,
+        pr, ps, ci, n,
+      ] = await Promise.all([
+        db.users.getAll(),
+        db.consultants.getAll(),
+        db.projects.getAll(),
+        db.projectPhases.getAll(),
+        db.committees.getAll(),
+        db.committeeMembers.getAll(),
+        db.meetings.getAll(),
+        db.meetingAttendees.getAll(),
+        db.meetingReports.getAll(),
+        db.tasks.getAll(),
+        db.decisions.getAll(),
+        db.stakeholders.getAll(),
+        db.documents.getAll(),
+        db.risks.getAll(),
+        db.milestones.getAll(),
+        db.kpis.getAll(),
+        db.projectProviders.getAll(),
+        db.projectServices.getAll(),
+        db.costItems.getAll(),
+        db.notifications.getAll(),
+      ]);
+      setUsers(u);
+      setConsultants(c);
+      setProjects(p);
+      setProjectPhases(pp);
+      setCommittees(cm);
+      setCommitteeMembers(cmm);
+      setMeetings(mt);
+      setMeetingAttendees(mta);
+      setMeetingReports(mtr);
+      setTasks(t);
+      setDecisions(d);
+      setStakeholders(s);
+      setDocuments(doc);
+      setRisks(r);
+      setMilestones(ms);
+      setKpis(k);
+      setProjectProviders(pr);
+      setProjectServices(ps);
+      setCostItems(ci);
+      setNotifications(n);
+    } catch (err) {
+      console.error("Failed to load data from Supabase:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  const addProject = useCallback((p: Project) => {
-    setProjects((prev) => [{ ...p, id: generateId("prj") }, ...prev]);
+  useEffect(() => {
+    loadAll();
+  }, [loadAll]);
+
+  // --- User CRUD ---
+  const addUser = useCallback(async (u: User) => {
+    const created = await db.users.create({ ...u, id: generateId("usr") });
+    setUsers((prev) => [created, ...prev]);
   }, []);
-  const updateProject = useCallback((id: string, data: Partial<Project>) => {
-    setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, ...data, updatedAt: new Date().toISOString() } : p)));
+
+  const updateUser = useCallback(async (id: string, data: Partial<User>) => {
+    const updated = await db.users.update(id, data);
+    setUsers((prev) => prev.map((u) => (u.id === id ? updated : u)));
   }, []);
-  const deleteProject = useCallback((id: string) => {
+
+  const deleteUser = useCallback(async (id: string) => {
+    await db.users.delete(id);
+    setUsers((prev) => prev.filter((u) => u.id !== id));
+  }, []);
+
+  // --- Project CRUD ---
+  const addProject = useCallback(async (p: Project) => {
+    const created = await db.projects.create({ ...p, id: generateId("prj") });
+    setProjects((prev) => [created, ...prev]);
+  }, []);
+
+  const updateProject = useCallback(async (id: string, data: Partial<Project>) => {
+    const updated = await db.projects.update(id, data);
+    setProjects((prev) => prev.map((p) => (p.id === id ? updated : p)));
+  }, []);
+
+  const deleteProject = useCallback(async (id: string) => {
+    await db.projects.delete(id);
     setProjects((prev) => prev.filter((p) => p.id !== id));
   }, []);
 
-  const addTask = useCallback((t: Task) => {
-    setTasks((prev) => [{ ...t, id: generateId("tsk") }, ...prev]);
-  }, []);
-  const updateTask = useCallback((id: string, data: Partial<Task>) => {
-    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, ...data, updatedAt: new Date().toISOString() } : t)));
-  }, []);
-  const deleteTask = useCallback((id: string) => {
-    setTasks((prev) => prev.filter((t) => t.id !== id));
-  }, []);
-  const moveTask = useCallback((id: string, status: Task["status"]) => {
-    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, status, updatedAt: new Date().toISOString() } : t)));
+  // --- Task CRUD ---
+  const addTask = useCallback(async (t: Task) => {
+    const created = await db.tasks.create({ ...t, id: generateId("tsk") });
+    setTasks((prev) => [created, ...prev]);
   }, []);
 
-  const addMeeting = useCallback((m: Meeting) => {
-    setMeetings((prev) => [{ ...m, id: generateId("mtg") }, ...prev]);
+  const updateTask = useCallback(async (id: string, data: Partial<Task>) => {
+    const updated = await db.tasks.update(id, data);
+    setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
   }, []);
-  const updateMeeting = useCallback((id: string, data: Partial<Meeting>) => {
-    setMeetings((prev) => prev.map((m) => (m.id === id ? { ...m, ...data, updatedAt: new Date().toISOString() } : m)));
+
+  const deleteTask = useCallback(async (id: string) => {
+    await db.tasks.delete(id);
+    setTasks((prev) => prev.filter((t) => t.id !== id));
   }, []);
-  const deleteMeeting = useCallback((id: string) => {
+
+  const moveTask = useCallback(async (id: string, status: Task["status"]) => {
+    const updated = await db.tasks.update(id, { status });
+    setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
+  }, []);
+
+  // --- Meeting CRUD ---
+  const addMeeting = useCallback(async (m: Meeting) => {
+    const created = await db.meetings.create({ ...m, id: generateId("mtg") });
+    setMeetings((prev) => [created, ...prev]);
+  }, []);
+
+  const updateMeeting = useCallback(async (id: string, data: Partial<Meeting>) => {
+    const updated = await db.meetings.update(id, data);
+    setMeetings((prev) => prev.map((m) => (m.id === id ? updated : m)));
+  }, []);
+
+  const deleteMeeting = useCallback(async (id: string) => {
+    await db.meetings.delete(id);
     setMeetings((prev) => prev.filter((m) => m.id !== id));
   }, []);
 
-  const addDecision = useCallback((d: Decision) => {
-    setDecisions((prev) => [{ ...d, id: generateId("dec") }, ...prev]);
+  // --- Decision CRUD ---
+  const addDecision = useCallback(async (d: Decision) => {
+    const created = await db.decisions.create({ ...d, id: generateId("dec") });
+    setDecisions((prev) => [created, ...prev]);
   }, []);
-  const updateDecision = useCallback((id: string, data: Partial<Decision>) => {
-    setDecisions((prev) => prev.map((d) => (d.id === id ? { ...d, ...data, updatedAt: new Date().toISOString() } : d)));
+
+  const updateDecision = useCallback(async (id: string, data: Partial<Decision>) => {
+    const updated = await db.decisions.update(id, data);
+    setDecisions((prev) => prev.map((d) => (d.id === id ? updated : d)));
   }, []);
-  const deleteDecision = useCallback((id: string) => {
+
+  const deleteDecision = useCallback(async (id: string) => {
+    await db.decisions.delete(id);
     setDecisions((prev) => prev.filter((d) => d.id !== id));
   }, []);
 
-  const addStakeholder = useCallback((s: Stakeholder) => {
-    setStakeholders((prev) => [{ ...s, id: generateId("sth") }, ...prev]);
+  // --- Stakeholder CRUD ---
+  const addStakeholder = useCallback(async (s: Stakeholder) => {
+    const created = await db.stakeholders.create({ ...s, id: generateId("sth") });
+    setStakeholders((prev) => [created, ...prev]);
   }, []);
-  const updateStakeholder = useCallback((id: string, data: Partial<Stakeholder>) => {
-    setStakeholders((prev) => prev.map((s) => (s.id === id ? { ...s, ...data, updatedAt: new Date().toISOString() } : s)));
+
+  const updateStakeholder = useCallback(async (id: string, data: Partial<Stakeholder>) => {
+    const updated = await db.stakeholders.update(id, data);
+    setStakeholders((prev) => prev.map((s) => (s.id === id ? updated : s)));
   }, []);
-  const deleteStakeholder = useCallback((id: string) => {
+
+  const deleteStakeholder = useCallback(async (id: string) => {
+    await db.stakeholders.delete(id);
     setStakeholders((prev) => prev.filter((s) => s.id !== id));
   }, []);
 
-  const addDocument = useCallback((d: Document) => {
-    setDocuments((prev) => [{ ...d, id: generateId("doc") }, ...prev]);
+  // --- Document CRUD ---
+  const addDocument = useCallback(async (d: Document) => {
+    const created = await db.documents.create({ ...d, id: generateId("doc") });
+    setDocuments((prev) => [created, ...prev]);
   }, []);
-  const updateDocument = useCallback((id: string, data: Partial<Document>) => {
-    setDocuments((prev) => prev.map((d) => (d.id === id ? { ...d, ...data, updatedAt: new Date().toISOString() } : d)));
+
+  const updateDocument = useCallback(async (id: string, data: Partial<Document>) => {
+    const updated = await db.documents.update(id, data);
+    setDocuments((prev) => prev.map((d) => (d.id === id ? updated : d)));
   }, []);
-  const deleteDocument = useCallback((id: string) => {
+
+  const deleteDocument = useCallback(async (id: string) => {
+    await db.documents.delete(id);
     setDocuments((prev) => prev.filter((d) => d.id !== id));
+  }, []);
+
+  // --- Invitation CRUD ---
+  const addInvitation = useCallback(async (i: Invitation) => {
+    setInvitations((prev) => [{ ...i, id: generateId("inv") }, ...prev]);
+  }, []);
+
+  const updateInvitation = useCallback(async (id: string, data: Partial<Invitation>) => {
+    setInvitations((prev) => prev.map((i) => (i.id === id ? { ...i, ...data } : i)));
+  }, []);
+
+  const deleteInvitation = useCallback(async (id: string) => {
+    setInvitations((prev) => prev.filter((i) => i.id !== id));
+  }, []);
+
+  // --- KPI CRUD ---
+  const addKPI = useCallback(async (k: KPI) => {
+    const created = await db.kpis.create({ ...k, id: generateId("kpi") });
+    setKpis((prev) => [created, ...prev]);
+  }, []);
+
+  const updateKPI = useCallback(async (id: string, data: Partial<KPI>) => {
+    const updated = await db.kpis.update(id, data);
+    setKpis((prev) => prev.map((k) => (k.id === id ? updated : k)));
+  }, []);
+
+  const deleteKPI = useCallback(async (id: string) => {
+    await db.kpis.delete(id);
+    setKpis((prev) => prev.filter((k) => k.id !== id));
   }, []);
 
   return (
     <AppContext.Provider
       value={{
+        loading,
         users, consultants, projects, projectPhases, committees, committeeMembers,
         meetings, meetingAttendees, meetingReports, tasks, decisions, stakeholders,
         documents, risks, milestones, kpis, projectProviders, projectServices,
-        costItems, notifications,
+        costItems, notifications, invitations,
+        addUser, updateUser, deleteUser,
         addProject, updateProject, deleteProject,
         addTask, updateTask, deleteTask, moveTask,
         addMeeting, updateMeeting, deleteMeeting,
         addDecision, updateDecision, deleteDecision,
         addStakeholder, updateStakeholder, deleteStakeholder,
         addDocument, updateDocument, deleteDocument,
+        addInvitation, updateInvitation, deleteInvitation,
+        addKPI, updateKPI, deleteKPI,
+        refresh: loadAll,
       }}
     >
       {children}

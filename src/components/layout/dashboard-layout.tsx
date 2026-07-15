@@ -11,10 +11,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   const { collapsed } = useSidebar();
 
   return (
-    <div className="min-h-screen bg-grid flex flex-col">
+    <div className="min-h-screen bg-grid flex flex-col overflow-x-hidden">
       <Sidebar />
       <main
-        className="min-h-screen flex-1 transition-all duration-300 ease-in-out"
+        className="min-h-screen flex-1 transition-all duration-300 ease-in-out overflow-x-hidden"
         style={{ marginLeft: collapsed ? 68 : 256 }}
       >
         <div className="p-8 pb-16">{children}</div>

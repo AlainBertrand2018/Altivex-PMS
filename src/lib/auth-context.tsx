@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import { User } from "@/types";
-import { mockUsers } from "@/data/mock";
+import { supabase } from "@/lib/supabase";
 
 const INACTIVITY_TIMEOUT_MS = 20 * 60 * 1000; // 20 minutes
 
@@ -16,22 +16,40 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function mapDbUser(row: Record<string, unknown>): User {
+  return {
+    id: row.id as string,
+    name: row.name as string,
+    email: row.email as string,
+    avatar: (row.avatar as string) ?? undefined,
+    role: row.role as User["role"],
+    department: (row.department as string) ?? undefined,
+    phone: (row.phone as string) ?? undefined,
+    authId: (row.auth_id as string) ?? undefined,
+    createdAt: row.created_at as string,
+    updatedAt: row.updated_at as string,
+  };
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Session-only: read from sessionStorage on mount
+  // Restore session on mount
   useEffect(() => {
-    const stored = sessionStorage.getItem("altivex_user");
-    if (stored) {
-      try {
-        setUser(JSON.parse(stored));
-      } catch {
-        sessionStorage.removeItem("altivex_user");
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data } = await supabase
+          .from("users")
+          .select("*")
+          .eq("auth_id", session.user.id)
+          .single();
+        if (data) setUser(mapDbUser(data));
       }
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    })();
   }, []);
 
   // Reset inactivity timer on auth state change
@@ -40,6 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     timerRef.current = setTimeout(() => {
       setUser(null);
       sessionStorage.removeItem("altivex_user");
+      supabase.auth.signOut();
     }, INACTIVITY_TIMEOUT_MS);
   }, []);
 
@@ -63,21 +82,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [user, resetTimer]);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    const DEMO_CREDENTIALS = { email: "demo@mymail.com", password: "DEMO2026" };
-    const found = mockUsers.find((u) => u.email === email);
-    if (!found) return false;
-    if (email === DEMO_CREDENTIALS.email && password !== DEMO_CREDENTIALS.password) return false;
-    if (email !== DEMO_CREDENTIALS.email) return false;
-    setUser(found);
-    sessionStorage.setItem("altivex_user", JSON.stringify(found));
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error || !data.user) return false;
+
+    const { data: dbUser } = await supabase
+      .from("users")
+      .select("*")
+      .eq("auth_id", data.user.id)
+      .single();
+
+    if (!dbUser) return false;
+
+    setUser(mapDbUser(dbUser));
     resetTimer();
     return true;
   };
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
     setUser(null);
     sessionStorage.removeItem("altivex_user");
     if (timerRef.current) clearTimeout(timerRef.current);
+    await supabase.auth.signOut();
   }, []);
 
   return (

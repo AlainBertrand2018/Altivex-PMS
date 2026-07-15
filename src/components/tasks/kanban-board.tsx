@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import {
   DndContext,
   closestCenter,
@@ -8,8 +9,8 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
-  DragOverlay,
   DragStartEvent,
+  DragOverlay,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -18,9 +19,9 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Badge } from "@/components/ui/badge";
-import { GripVertical, Calendar, Plus, Pencil, Trash2 } from "lucide-react";
+import { GripVertical, Calendar, Plus, MessageSquare, Paperclip, Eye, Flag, Filter, Users, Share2, ChevronDown } from "lucide-react";
 import { useApp } from "@/lib/app-context";
-import { Task, TaskStatus } from "@/types";
+import { Task, TaskStatus, Project, User } from "@/types";
 
 const statusConfig: Record<TaskStatus, {
   label: string;
@@ -29,103 +30,136 @@ const statusConfig: Record<TaskStatus, {
   colBg: string;
   cardBorder: string;
   cardBg: string;
-  cardBgDark: string;
   badge: string;
   badgeDark: string;
   glow: string;
+  headerColor: string;
+  headerBg: string;
+  countBg: string;
 }> = {
   todo: {
     label: "To Do",
-    dot: "bg-slate-400 dark:bg-slate-400",
-    colBorder: "border-slate-300 dark:border-slate-400/20",
-    colBg: "bg-slate-100/80 dark:bg-slate-500/[0.03]",
-    cardBorder: "border-l-slate-400 dark:border-l-slate-400",
-    cardBg: "bg-white dark:bg-slate-500/[0.04]",
-    cardBgDark: "dark:bg-slate-500/[0.04]",
-    badge: "bg-slate-100 text-slate-600 border-slate-200",
+    dot: "bg-slate-400",
+    colBorder: "border-slate-400/20",
+    colBg: "bg-slate-500/[0.02]",
+    cardBorder: "border-l-slate-400",
+    cardBg: "bg-slate-500/[0.03]",
+    badge: "bg-slate-400/10 text-slate-400 border-slate-400/20",
     badgeDark: "dark:bg-slate-400/10 dark:text-slate-400 dark:border-slate-400/20",
-    glow: "shadow-slate-400/5 dark:shadow-slate-400/5",
+    glow: "shadow-slate-400/5",
+    headerColor: "text-slate-400",
+    headerBg: "bg-slate-500/10",
+    countBg: "bg-slate-500/20 text-slate-400",
   },
   in_progress: {
     label: "In Progress",
-    dot: "bg-blue-500 dark:bg-blue-500",
-    colBorder: "border-blue-200 dark:border-blue-500/20",
-    colBg: "bg-blue-50/80 dark:bg-blue-500/[0.03]",
-    cardBorder: "border-l-blue-500 dark:border-l-blue-500",
-    cardBg: "bg-white dark:bg-blue-500/[0.04]",
-    cardBgDark: "dark:bg-blue-500/[0.04]",
-    badge: "bg-blue-100 text-blue-600 border-blue-200",
-    badgeDark: "dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20",
-    glow: "shadow-blue-500/5 dark:shadow-blue-500/5",
+    dot: "bg-primary",
+    colBorder: "border-primary/20",
+    colBg: "bg-primary/[0.02]",
+    cardBorder: "border-l-primary",
+    cardBg: "bg-primary/[0.03]",
+    badge: "bg-primary/10 text-primary border-primary/20",
+    badgeDark: "dark:bg-primary/10 dark:text-primary dark:border-primary/20",
+    glow: "shadow-primary/5",
+    headerColor: "text-primary",
+    headerBg: "bg-primary/10",
+    countBg: "bg-primary/20 text-primary",
   },
   review: {
-    label: "Review",
-    dot: "bg-amber-500 dark:bg-amber-500",
-    colBorder: "border-amber-200 dark:border-amber-500/20",
-    colBg: "bg-amber-50/80 dark:bg-amber-500/[0.03]",
-    cardBorder: "border-l-amber-500 dark:border-l-amber-500",
-    cardBg: "bg-white dark:bg-amber-500/[0.04]",
-    cardBgDark: "dark:bg-amber-500/[0.04]",
-    badge: "bg-amber-100 text-amber-600 border-amber-200",
-    badgeDark: "dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20",
-    glow: "shadow-amber-500/5 dark:shadow-amber-500/5",
+    label: "Under Review",
+    dot: "bg-tertiary",
+    colBorder: "border-tertiary/20",
+    colBg: "bg-tertiary/[0.02]",
+    cardBorder: "border-l-tertiary",
+    cardBg: "bg-tertiary/[0.03]",
+    badge: "bg-tertiary/10 text-tertiary border-tertiary/20",
+    badgeDark: "dark:bg-tertiary/10 dark:text-tertiary dark:border-tertiary/20",
+    glow: "shadow-tertiary/5",
+    headerColor: "text-tertiary",
+    headerBg: "bg-tertiary/10",
+    countBg: "bg-tertiary/20 text-tertiary",
   },
   done: {
     label: "Done",
-    dot: "bg-emerald-500 dark:bg-emerald-500",
-    colBorder: "border-emerald-200 dark:border-emerald-500/20",
-    colBg: "bg-emerald-50/80 dark:bg-emerald-500/[0.03]",
-    cardBorder: "border-l-emerald-500 dark:border-l-emerald-500",
-    cardBg: "bg-white dark:bg-emerald-500/[0.04]",
-    cardBgDark: "dark:bg-emerald-500/[0.04]",
-    badge: "bg-emerald-100 text-emerald-600 border-emerald-200",
-    badgeDark: "dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20",
-    glow: "shadow-emerald-500/5 dark:shadow-emerald-500/5",
+    dot: "bg-secondary",
+    colBorder: "border-secondary/20",
+    colBg: "bg-secondary/[0.02]",
+    cardBorder: "border-l-secondary",
+    cardBg: "bg-secondary/[0.03]",
+    badge: "bg-secondary/10 text-secondary border-secondary/20",
+    badgeDark: "dark:bg-secondary/10 dark:text-secondary dark:border-secondary/20",
+    glow: "shadow-secondary/5",
+    headerColor: "text-secondary",
+    headerBg: "bg-secondary/10",
+    countBg: "bg-secondary/20 text-secondary",
   },
   blocked: {
     label: "Blocked",
-    dot: "bg-red-500 dark:bg-red-500",
-    colBorder: "border-red-200 dark:border-red-500/20",
-    colBg: "bg-red-50/80 dark:bg-red-500/[0.03]",
-    cardBorder: "border-l-red-500 dark:border-l-red-500",
-    cardBg: "bg-white dark:bg-red-500/[0.04]",
-    cardBgDark: "dark:bg-red-500/[0.04]",
-    badge: "bg-red-100 text-red-600 border-red-200",
-    badgeDark: "dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20",
-    glow: "shadow-red-500/5 dark:shadow-red-500/5",
+    dot: "bg-error",
+    colBorder: "border-error/20",
+    colBg: "bg-error/[0.02]",
+    cardBorder: "border-l-error",
+    cardBg: "bg-error/[0.03]",
+    badge: "bg-error/10 text-error border-error/20",
+    badgeDark: "dark:bg-error/10 dark:text-error dark:border-error/20",
+    glow: "shadow-error/5",
+    headerColor: "text-error",
+    headerBg: "bg-error/10",
+    countBg: "bg-error/20 text-error",
   },
 };
 
-const priorityColors: Record<string, { light: string; dark: string }> = {
+const priorityConfig: Record<string, {
+  label: string;
+  color: string;
+  bg: string;
+  border: string;
+  dot: string;
+}> = {
   critical: {
-    light: "bg-red-100 text-red-600 border-red-200",
-    dark: "dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20",
+    label: "CRITICAL",
+    color: "text-error",
+    bg: "bg-error/10",
+    border: "border-error/20",
+    dot: "bg-error",
   },
   high: {
-    light: "bg-orange-100 text-orange-600 border-orange-200",
-    dark: "dark:bg-orange-500/10 dark:text-orange-400 dark:border-orange-500/20",
+    label: "HIGH",
+    color: "text-tertiary",
+    bg: "bg-tertiary/10",
+    border: "border-tertiary/20",
+    dot: "bg-tertiary",
   },
   medium: {
-    light: "bg-blue-100 text-blue-600 border-blue-200",
-    dark: "dark:bg-blue-400/10 dark:text-blue-400 dark:border-blue-400/20",
+    label: "MEDIUM",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    border: "border-primary/20",
+    dot: "bg-primary",
   },
   low: {
-    light: "bg-slate-100 text-slate-500 border-slate-200",
-    dark: "dark:bg-slate-400/10 dark:text-slate-400 dark:border-slate-400/20",
+    label: "LOW",
+    color: "text-slate-400",
+    bg: "bg-slate-400/10",
+    border: "border-slate-400/20",
+    dot: "bg-slate-400",
   },
 };
 
-interface SortableTaskCardProps {
+function SortableTaskCard({
+  task,
+  onEdit,
+  onDelete,
+  onNavigate,
+}: {
   task: Task;
   onEdit: (task: Task) => void;
   onDelete: (id: string) => void;
-}
-
-function SortableTaskCard({ task, onEdit, onDelete }: SortableTaskCardProps) {
+  onNavigate: (taskId: string) => void;
+}) {
   const { users, projects } = useApp();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
-  const status = statusConfig[task.status] || statusConfig.todo;
-  const pColors = priorityColors[task.priority] || priorityColors.medium;
+  const pColors = priorityConfig[task.priority] || priorityConfig.medium;
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -133,73 +167,84 @@ function SortableTaskCard({ task, onEdit, onDelete }: SortableTaskCardProps) {
     opacity: isDragging ? 0.4 : 1,
   };
 
-  const assignee = users.find((u) => u.id === task.assignedTo);
+  const assignee = users.find((u: User) => u.id === task.assignedTo);
   const project = projects.find((p) => p.id === task.projectId);
 
   return (
     <div ref={setNodeRef} style={style}>
       <div
         className={`
-          rounded-xl border-l-[3px] ${status.cardBorder}
-          ${status.cardBg} backdrop-blur-sm
+          glass-card rounded-xl border-l-[3px] ${pColors.border} ${pColors.dot}
           border border-border/50 border-l-transparent
-          hover:border-border hover:shadow-lg ${status.glow}
-          transition-all cursor-pointer group
+          hover:border-border hover:shadow-lg transition-all cursor-pointer group
+          p-4 space-y-3
         `}
+        onClick={() => onNavigate(task.id)}
       >
-        <div className="p-4 space-y-3">
-          <div className="flex items-start justify-between">
-            <h4 className="text-sm font-medium text-foreground leading-tight flex-1">
-              {task.title}
-            </h4>
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2">
-              <button
-                onClick={(e) => { e.stopPropagation(); onEdit(task); }}
-                className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <Pencil className="w-3 h-3" />
-              </button>
-              <button
-                onClick={(e) => { e.stopPropagation(); onDelete(task.id); }}
-                className="p-1 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-colors"
-              >
-                <Trash2 className="w-3 h-3" />
-              </button>
-              <div {...attributes} {...listeners} className="p-1 rounded hover:bg-accent cursor-grab active:cursor-grabbing text-muted-foreground/30">
-                <GripVertical className="w-3 h-3" />
-              </div>
+        <div className="flex items-start justify-between">
+          <h4 className="font-headline-md text-[15px] leading-snug flex-1">
+            {task.title}
+          </h4>
+          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2">
+            <button
+              onClick={(e) => { e.stopPropagation(); onEdit(task); }}
+              className="p-1 rounded hover:bg-white/5 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <GripVertical className="w-3 h-3" />
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); onEdit(task); }}
+              className="p-1 rounded hover:bg-white/5 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Paperclip className="w-3 h-3" />
+            </button>
+            <div {...attributes} {...listeners} className="p-1 rounded hover:bg-white/5 cursor-grab active:cursor-grabbing text-muted-foreground/30">
+              <GripVertical className="w-3 h-3" />
             </div>
           </div>
+        </div>
 
-          <p className="text-xs text-muted-foreground line-clamp-2">{task.description}</p>
+        <p className="text-xs text-muted-foreground line-clamp-2">{task.description}</p>
 
-          <div className="flex items-center gap-2 flex-wrap">
-            <Badge variant="outline" className={`text-[9px] font-medium ${status.badge} ${status.badgeDark}`}>
-              {status.label}
+        <div className="flex items-center gap-2 flex-wrap">
+          <Badge variant="outline" className={`text-[10px] font-bold ${pColors.bg} ${pColors.border} ${pColors.color} tracking-widest flex items-center gap-1`}>
+            <span className={`glow-dot ${pColors.dot}`} />
+            {pColors.label}
+          </Badge>
+          {task.tags?.slice(0, 2).map((tag, i) => (
+            <Badge
+              key={tag}
+              variant="outline"
+              className={`text-[9px] font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full border border-primary/20`}
+            >
+              {tag}
             </Badge>
-            <Badge variant="outline" className={`text-[9px] font-medium ${pColors.light} ${pColors.dark}`}>
-              {task.priority.toUpperCase()}
-            </Badge>
-            <span className="text-[10px] text-primary/70 truncate">{project?.name?.split(" ").slice(0, 3).join(" ")}</span>
-          </div>
+          ))}
+        </div>
 
-          <div className="flex items-center justify-between pt-1 border-t border-border/30">
+        <div className="flex items-center justify-between mt-auto pt-2 border-t border-border/30">
+          <div className="flex items-center gap-2">
             {assignee ? (
-              <div className="flex items-center gap-1.5">
-                <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-primary text-[8px] font-medium">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary text-[9px] font-bold">
                   {assignee.name?.split(" ").map((n) => n[0]).join("")}
                 </div>
-                <span className="text-[10px] text-muted-foreground">{assignee.name?.split(" ")[0]}</span>
+                <span className="font-data-mono text-[11px] text-muted-foreground">
+                  {task.dueDate ? new Date(task.dueDate).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "No date"}
+                </span>
               </div>
             ) : (
-              <div />
-            )}
-            {task.dueDate && (
-              <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                <Calendar className="w-3 h-3" />
-                {new Date(task.dueDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-slate-500/20 flex items-center justify-center text-slate-400 text-[9px] font-bold">—</div>
+                <span className="font-data-mono text-[11px] text-muted-foreground">
+                  {task.dueDate ? new Date(task.dueDate).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "No date"}
+                </span>
               </div>
             )}
+          </div>
+          <div className="flex items-center gap-2">
+            <MessageSquare className="w-4 h-4 text-muted-foreground/60 hover:text-primary transition-colors" />
+            <Paperclip className="w-4 h-4 text-muted-foreground/60 hover:text-primary transition-colors" />
           </div>
         </div>
       </div>
@@ -209,15 +254,13 @@ function SortableTaskCard({ task, onEdit, onDelete }: SortableTaskCardProps) {
 
 function OverlayCard({ task }: { task: Task }) {
   const { users, projects } = useApp();
-  const status = statusConfig[task.status] || statusConfig.todo;
-  const pColors = priorityColors[task.priority] || priorityColors.medium;
-  const assignee = users.find((u) => u.id === task.assignedTo);
+  const pColors = priorityConfig[task.priority] || priorityConfig.medium;
+  const assignee = users.find((u: User) => u.id === task.assignedTo);
   const project = projects.find((p) => p.id === task.projectId);
 
   return (
     <div className={`
-      rounded-xl border-l-[3px] ${status.cardBorder}
-      bg-card/90 backdrop-blur-md
+      glass-card rounded-xl border-l-[3px] ${pColors.border} ${pColors.dot}
       border border-border/80 border-l-transparent
       shadow-2xl shadow-black/40 rotate-2 scale-105
     `}>
@@ -225,11 +268,9 @@ function OverlayCard({ task }: { task: Task }) {
         <h4 className="text-sm font-medium text-foreground leading-tight">{task.title}</h4>
         <p className="text-xs text-muted-foreground line-clamp-2">{task.description}</p>
         <div className="flex items-center gap-2 flex-wrap">
-          <Badge variant="outline" className={`text-[9px] font-medium ${status.badge} ${status.badgeDark}`}>
-            {status.label}
-          </Badge>
-          <Badge variant="outline" className={`text-[9px] font-medium ${pColors.light} ${pColors.dark}`}>
-            {task.priority.toUpperCase()}
+          <Badge variant="outline" className={`text-[9px] font-bold ${pColors.bg} ${pColors.border} ${pColors.color} tracking-widest flex items-center gap-1`}>
+            <span className={`glow-dot ${pColors.dot}`} />
+            {pColors.label}
           </Badge>
           <span className="text-[10px] text-primary/70">{project?.name?.split(" ").slice(0, 3).join(" ")}</span>
         </div>
@@ -257,10 +298,12 @@ function OverlayCard({ task }: { task: Task }) {
 interface KanbanBoardProps {
   onCreateTask: () => void;
   onEditTask: (task: Task) => void;
+  selectedProject?: Project | null;
 }
 
-export default function KanbanBoard({ onCreateTask, onEditTask }: KanbanBoardProps) {
-  const { tasks, moveTask, deleteTask } = useApp();
+export default function KanbanBoard({ onCreateTask, onEditTask, selectedProject }: KanbanBoardProps) {
+  const router = useRouter();
+  const { tasks, moveTask, deleteTask, users } = useApp();
   const [activeId, setActiveId] = React.useState<string | null>(null);
 
   const sensors = useSensors(
@@ -294,6 +337,12 @@ export default function KanbanBoard({ onCreateTask, onEditTask }: KanbanBoardPro
     }
   }
 
+  const filteredTasks = selectedProject
+    ? tasks.filter((t) => t.projectId === selectedProject.id)
+    : tasks;
+
+  const columnStatuses: TaskStatus[] = ["todo", "in_progress", "review", "done", "blocked"];
+
   return (
     <DndContext
       sensors={sensors}
@@ -301,38 +350,50 @@ export default function KanbanBoard({ onCreateTask, onEditTask }: KanbanBoardPro
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="grid grid-cols-5 gap-4 min-h-[60vh]">
-        {(Object.keys(statusConfig) as TaskStatus[]).map((statusId) => {
+      <div className="flex gap-6 h-full items-start min-w-[1200px] overflow-x-auto custom-scrollbar pb-4">
+        {columnStatuses.map((statusId) => {
           const cfg = statusConfig[statusId];
-          const columnTasks = tasks.filter((t) => t.status === statusId);
+          const columnTasks = filteredTasks.filter((t) => t.status === statusId);
           return (
-            <div key={statusId} className="space-y-3">
-              <div className="flex items-center justify-between px-1">
+            <div key={statusId} className="w-[280px] flex-shrink-0 flex flex-col gap-4">
+              <div className="flex items-center justify-between px-2 mb-1">
                 <div className="flex items-center gap-2">
                   <div className={`w-2.5 h-2.5 rounded-full ${cfg.dot}`} />
-                  <span className="text-sm font-medium text-foreground">{cfg.label}</span>
-                  <span className="text-xs text-muted-foreground">({columnTasks.length})</span>
+                  <span className="font-label-caps text-label-caps text-on-surface-variant">
+                    {cfg.label.toUpperCase()}
+                  </span>
+                  <span className={`${cfg.countBg} px-2 py-0.5 rounded text-[10px] font-bold`}>
+                    {columnTasks.length}
+                  </span>
                 </div>
-                {statusId === "todo" && (
-                  <button
-                    onClick={onCreateTask}
-                    className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
-                )}
+                <button
+                  onClick={onCreateTask}
+                  disabled={!selectedProject && statusId === "todo"}
+                  className="p-1 rounded hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
               </div>
 
               <SortableContext items={columnTasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
-                <div className={`space-y-3 min-h-[200px] rounded-xl p-2 ${cfg.colBg} border border-dashed ${cfg.colBorder}`}>
+                <div className={`kanban-column p-3 space-y-4 overflow-y-auto custom-scrollbar flex-1 pb-10 ${cfg.colBorder} ${cfg.colBg} rounded-xl`}>
                   {columnTasks.map((task) => (
                     <SortableTaskCard
                       key={task.id}
                       task={task}
                       onEdit={onEditTask}
                       onDelete={deleteTask}
+                      onNavigate={(taskId) => router.push(`/tasks/${taskId}`)}
                     />
                   ))}
+                  <button
+                    onClick={onCreateTask}
+                    disabled={!selectedProject && statusId === "todo"}
+                    className="w-full py-3 border-2 border-dashed border-outline-variant/10 rounded-xl text-on-surface-variant hover:border-primary/40 hover:text-primary transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <Plus className="w-4 h-4" />
+                    New Task
+                  </button>
                 </div>
               </SortableContext>
             </div>

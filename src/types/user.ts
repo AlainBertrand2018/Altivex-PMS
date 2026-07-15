@@ -14,6 +14,7 @@ export interface User {
   role: UserRole;
   department?: string;
   phone?: string;
+  authId?: string;
   createdAt: string;
   updatedAt: string;
 }
