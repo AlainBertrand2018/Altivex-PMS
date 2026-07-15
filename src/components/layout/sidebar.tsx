@@ -11,8 +11,11 @@ import {
   CheckSquare,
   Gavel,
   Users,
+  UserCheck,
+  UserCog,
   FileText,
   Brain,
+  Siren,
   Settings,
   LogOut,
   PanelLeftClose,
@@ -25,13 +28,14 @@ import { useSidebar } from "./sidebar-context";
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/projects", label: "Projects", icon: FolderKanban },
+  { href: "/committees", label: "Committees", icon: Siren },
   { href: "/meetings", label: "Meetings", icon: CalendarClock },
   { href: "/tasks", label: "Tasks", icon: CheckSquare },
   { href: "/decisions", label: "Decisions", icon: Gavel },
-  { href: "/stakeholders", label: "Stakeholders", icon: Users },
+  { href: "/stakeholders", label: "Stakeholders", icon: UserCheck },
   { href: "/documents", label: "Documents", icon: FileText },
   { href: "/intelligence", label: "Intelligence", icon: Brain },
-  { href: "/users", label: "Users", icon: Users },
+  { href: "/users", label: "Users", icon: UserCog },
 ];
 
 export default function Sidebar() {

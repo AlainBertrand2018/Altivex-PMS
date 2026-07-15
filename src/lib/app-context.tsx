@@ -55,6 +55,9 @@ interface AppContextType extends AppState {
   addUser: (u: User) => Promise<void>;
   updateUser: (id: string, data: Partial<User>) => Promise<void>;
   deleteUser: (id: string) => Promise<void>;
+  addCommittee: (c: Committee) => Promise<void>;
+  updateCommittee: (id: string, data: Partial<Committee>) => Promise<void>;
+  deleteCommittee: (id: string) => Promise<void>;
   addProject: (p: Project) => Promise<void>;
   updateProject: (id: string, data: Partial<Project>) => Promise<void>;
   deleteProject: (id: string) => Promise<void>;
@@ -182,6 +185,22 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const deleteUser = useCallback(async (id: string) => {
     await db.users.delete(id);
     setUsers((prev) => prev.filter((u) => u.id !== id));
+  }, []);
+
+  // --- Committee CRUD ---
+  const addCommittee = useCallback(async (c: Committee) => {
+    const created = await db.committees.create({ ...c, id: generateId("cmt") });
+    setCommittees((prev) => [created, ...prev]);
+  }, []);
+
+  const updateCommittee = useCallback(async (id: string, data: Partial<Committee>) => {
+    const updated = await db.committees.update(id, data);
+    setCommittees((prev) => prev.map((c) => (c.id === id ? updated : c)));
+  }, []);
+
+  const deleteCommittee = useCallback(async (id: string) => {
+    await db.committees.delete(id);
+    setCommittees((prev) => prev.filter((c) => c.id !== id));
   }, []);
 
   // --- Project CRUD ---
@@ -323,6 +342,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         documents, risks, milestones, kpis, projectProviders, projectServices,
         costItems, notifications, invitations,
         addUser, updateUser, deleteUser,
+        addCommittee, updateCommittee, deleteCommittee,
         addProject, updateProject, deleteProject,
         addTask, updateTask, deleteTask, moveTask,
         addMeeting, updateMeeting, deleteMeeting,
