@@ -1,5 +1,7 @@
 export * from "./user";
+export * from "./consultant";
 export * from "./project";
+export * from "./project-member";
 export * from "./committee";
 export * from "./meeting";
 export * from "./task";
@@ -7,3 +9,6 @@ export * from "./decision";
 export * from "./stakeholder";
 export * from "./document";
 export * from "./risk";
+export * from "./provider";
+export * from "./cost-item";
+export * from "./notification";

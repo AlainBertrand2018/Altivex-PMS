@@ -1,19 +1,17 @@
 export type DocumentType =
-  | "contract"
-  | "report"
-  | "proposal"
-  | "invoice"
   | "plan"
   | "specification"
-  | "correspondence"
+  | "contract"
+  | "proposal"
+  | "report"
   | "other";
 
 export interface Document {
   id: string;
-  name: string;
-  type: DocumentType;
   projectId: string;
   meetingId?: string;
+  name: string;
+  type: DocumentType;
   fileUrl: string;
   fileSize: number;
   mimeType: string;

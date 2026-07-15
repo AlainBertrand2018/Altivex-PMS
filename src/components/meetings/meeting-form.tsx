@@ -11,7 +11,7 @@ interface MeetingFormProps {
 }
 
 export default function MeetingForm({ meeting, onSubmit, onCancel }: MeetingFormProps) {
-  const { projects, committees, users } = useApp();
+  const { projects, committees } = useApp();
 
   const [title, setTitle] = useState(meeting?.title || "");
   const [description, setDescription] = useState(meeting?.description || "");
@@ -33,9 +33,6 @@ export default function MeetingForm({ meeting, onSubmit, onCancel }: MeetingForm
       scheduledAt: new Date(scheduledAt).toISOString(),
       duration: Number(duration),
       location: location || undefined,
-      attendees: meeting?.attendees || [],
-      imageUrls: meeting?.imageUrls || [],
-      documentIds: meeting?.documentIds || [],
     });
   };
 

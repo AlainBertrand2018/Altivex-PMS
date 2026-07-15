@@ -14,8 +14,9 @@ export default function StakeholderForm({ stakeholder, onSubmit, onCancel }: Sta
   const { projects, users } = useApp();
 
   const [userId, setUserId] = useState(stakeholder?.userId || "");
+  const [name, setName] = useState(stakeholder?.name || "");
   const [projectId, setProjectId] = useState(stakeholder?.projectId || "");
-  const [category, setCategory] = useState<StakeholderCategory>(stakeholder?.category || "internal");
+  const [category, setCategory] = useState<StakeholderCategory>(stakeholder?.category || "external");
   const [influence, setInfluence] = useState<StakeholderInfluence>(stakeholder?.influence || "medium");
   const [interest, setInterest] = useState<StakeholderInterest>(stakeholder?.interest || "medium");
   const [role, setRole] = useState(stakeholder?.role || "");
@@ -24,7 +25,8 @@ export default function StakeholderForm({ stakeholder, onSubmit, onCancel }: Sta
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
-      userId,
+      userId: userId || undefined,
+      name: name || undefined,
       projectId,
       category,
       influence,
@@ -41,23 +43,27 @@ export default function StakeholderForm({ stakeholder, onSubmit, onCancel }: Sta
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Person</label>
-              <select value={userId} onChange={(e) => setUserId(e.target.value)} className="w-full px-4 py-2.5 rounded-lg bg-background border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" required>
-                <option value="">Select person</option>
+              <label className="text-sm font-medium text-foreground">User (optional)</label>
+              <select value={userId} onChange={(e) => setUserId(e.target.value)} className="w-full px-4 py-2.5 rounded-lg bg-background border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50">
+                <option value="">External (no account)</option>
                 {users.map((u) => (
                   <option key={u.id} value={u.id}>{u.name}</option>
                 ))}
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Project</label>
-              <select value={projectId} onChange={(e) => setProjectId(e.target.value)} className="w-full px-4 py-2.5 rounded-lg bg-background border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" required>
-                <option value="">Select project</option>
-                {projects.map((p) => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
-                ))}
-              </select>
+              <label className="text-sm font-medium text-foreground">Name</label>
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Stakeholder name (if no user account)" className="w-full px-4 py-2.5 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50" />
             </div>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Project</label>
+            <select value={projectId} onChange={(e) => setProjectId(e.target.value)} className="w-full px-4 py-2.5 rounded-lg bg-background border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+              <option value="">Select project</option>
+              {projects.map((p) => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Role</label>
@@ -67,12 +73,12 @@ export default function StakeholderForm({ stakeholder, onSubmit, onCancel }: Sta
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Category</label>
               <select value={category} onChange={(e) => setCategory(e.target.value as StakeholderCategory)} className="w-full px-4 py-2.5 rounded-lg bg-background border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50">
-                <option value="executive">Executive</option>
-                <option value="committee">Committee</option>
-                <option value="internal">Internal</option>
-                <option value="contractor">Contractor</option>
-                <option value="supplier">Supplier</option>
                 <option value="external">External</option>
+                <option value="executive">Executive</option>
+                <option value="government">Government</option>
+                <option value="sponsor">Sponsor</option>
+                <option value="media">Media</option>
+                <option value="academic">Academic</option>
               </select>
             </div>
             <div className="space-y-2">

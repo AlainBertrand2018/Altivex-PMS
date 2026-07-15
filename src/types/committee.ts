@@ -1,25 +1,28 @@
 export type CommitteeType =
+  | "executive"
   | "steering"
   | "governance"
-  | "technical"
-  | "executive"
-  | "advisory";
+  | "advisory"
+  | "sub_committee";
 
-export type CommitteeMemberRole = "chair" | "vice_chair" | "member" | "secretary" | "observer";
-
-export interface CommitteeMember {
-  userId: string;
-  role: CommitteeMemberRole;
-  joinedAt: string;
-}
+export type CommitteeMemberRole = "chair" | "vice_chair" | "member" | "observer";
 
 export interface Committee {
   id: string;
   name: string;
   description: string;
   type: CommitteeType;
-  members: CommitteeMember[];
-  projectIds: string[];
+  parentCommitteeId?: string;
+  projectId?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface CommitteeMember {
+  id: string;
+  committeeId: string;
+  userId?: string;
+  consultantId?: string;
+  memberRole: CommitteeMemberRole;
+  joinedAt: string;
 }

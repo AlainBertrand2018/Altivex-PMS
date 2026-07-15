@@ -1,29 +1,72 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback } from "react";
-import { Project, Task, Meeting, Decision, Stakeholder, Document, Risk, Committee, User } from "@/types";
 import {
+  User,
+  Consultant,
+  Project,
+  ProjectPhase,
+  Committee,
+  CommitteeMember,
+  Meeting,
+  MeetingAttendee,
+  MeetingReport,
+  Task,
+  Decision,
+  Stakeholder,
+  Document,
+  Risk,
+  Milestone,
+  KPI,
+  ProjectProvider,
+  ProjectService,
+  CostItem,
+  NotificationLog,
+} from "@/types";
+import {
+  mockUsers,
+  mockConsultants,
   mockProjects,
-  mockTasks,
+  mockProjectPhases,
+  mockCommittees,
+  mockCommitteeMembers,
   mockMeetings,
+  mockMeetingAttendees,
+  mockMeetingReports,
+  mockTasks,
   mockDecisions,
   mockStakeholders,
   mockDocuments,
   mockRisks,
-  mockCommittees,
-  mockUsers,
+  mockMilestones,
+  mockKPIs,
+  mockProjectProviders,
+  mockProjectServices,
+  mockCostItems,
+  mockNotifications,
 } from "@/data/mock";
 
 interface AppState {
+  users: User[];
+  consultants: Consultant[];
   projects: Project[];
-  tasks: Task[];
+  projectPhases: ProjectPhase[];
+  committees: Committee[];
+  committeeMembers: CommitteeMember[];
   meetings: Meeting[];
+  meetingAttendees: MeetingAttendee[];
+  meetingReports: MeetingReport[];
+  tasks: Task[];
   decisions: Decision[];
   stakeholders: Stakeholder[];
   documents: Document[];
   risks: Risk[];
-  committees: Committee[];
-  users: User[];
+  milestones: Milestone[];
+  kpis: KPI[];
+  projectProviders: ProjectProvider[];
+  projectServices: ProjectService[];
+  costItems: CostItem[];
+  notifications: NotificationLog[];
 }
 
 interface AppContextType extends AppState {
@@ -51,15 +94,26 @@ interface AppContextType extends AppState {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
+  const [users] = useState<User[]>(mockUsers);
+  const [consultants] = useState<Consultant[]>(mockConsultants);
   const [projects, setProjects] = useState<Project[]>(mockProjects);
-  const [tasks, setTasks] = useState<Task[]>(mockTasks);
+  const [projectPhases] = useState<ProjectPhase[]>(mockProjectPhases);
+  const [committees] = useState<Committee[]>(mockCommittees);
+  const [committeeMembers] = useState<CommitteeMember[]>(mockCommitteeMembers);
   const [meetings, setMeetings] = useState<Meeting[]>(mockMeetings);
+  const [meetingAttendees] = useState<MeetingAttendee[]>(mockMeetingAttendees);
+  const [meetingReports] = useState<MeetingReport[]>(mockMeetingReports);
+  const [tasks, setTasks] = useState<Task[]>(mockTasks);
   const [decisions, setDecisions] = useState<Decision[]>(mockDecisions);
   const [stakeholders, setStakeholders] = useState<Stakeholder[]>(mockStakeholders);
   const [documents, setDocuments] = useState<Document[]>(mockDocuments);
   const [risks] = useState<Risk[]>(mockRisks);
-  const [committees] = useState<Committee[]>(mockCommittees);
-  const [users] = useState<User[]>(mockUsers);
+  const [milestones] = useState<Milestone[]>(mockMilestones);
+  const [kpis] = useState<KPI[]>(mockKPIs);
+  const [projectProviders] = useState<ProjectProvider[]>(mockProjectProviders);
+  const [projectServices] = useState<ProjectService[]>(mockProjectServices);
+  const [costItems] = useState<CostItem[]>(mockCostItems);
+  const [notifications] = useState<NotificationLog[]>(mockNotifications);
 
   const generateId = (prefix: string) => `${prefix}_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 
@@ -129,7 +183,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   return (
     <AppContext.Provider
       value={{
-        projects, tasks, meetings, decisions, stakeholders, documents, risks, committees, users,
+        users, consultants, projects, projectPhases, committees, committeeMembers,
+        meetings, meetingAttendees, meetingReports, tasks, decisions, stakeholders,
+        documents, risks, milestones, kpis, projectProviders, projectServices,
+        costItems, notifications,
         addProject, updateProject, deleteProject,
         addTask, updateTask, deleteTask, moveTask,
         addMeeting, updateMeeting, deleteMeeting,

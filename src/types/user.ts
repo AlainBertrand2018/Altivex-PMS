@@ -1,12 +1,9 @@
 export type UserRole =
+  | "super_admin"
   | "admin"
-  | "committee_chair"
   | "committee_member"
-  | "project_manager"
   | "consultant"
-  | "contractor"
-  | "supplier"
-  | "executive"
+  | "provider_delegate"
   | "viewer";
 
 export interface User {

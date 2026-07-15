@@ -1,0 +1,1050 @@
+﻿-- ============================================================================
+-- Altivex PMS - Seed Data Migration
+-- Description: Inserts seed data for all 21 core tables covering 6 culinary
+--              events projects for Altivex, a Mauritius-based culinary events
+--              company. Data is inserted in strict dependency order.
+-- ============================================================================
+
+BEGIN;
+
+-- ============================================================================
+-- 1. USERS (19)
+-- ============================================================================
+
+INSERT INTO users (id, email, name, role, avatar_url, created_at, updated_at)
+VALUES
+  ('usr_001', 'demo@mymail.com', 'Demo User', 'super_admin', NULL, '2025-09-01T08:00:00+04:00', '2025-09-01T08:00:00+04:00'),
+  ('usr_002', 'arvin.ramdin@altivex.com', 'Chef Arvin Ramdin', 'admin', NULL, '2025-10-01T08:00:00+04:00', '2025-10-01T08:00:00+04:00'),
+  ('usr_003', 'priya.nundlah@altivex.com', 'Priya Nundlah', 'admin', NULL, '2025-10-01T08:30:00+04:00', '2025-10-01T08:30:00+04:00'),
+  ('usr_004', 'jm.rivet@altivex.com', 'Jean-Michel Rivet', 'admin', NULL, '2025-10-01T09:00:00+04:00', '2025-10-01T09:00:00+04:00'),
+  ('usr_005', 'sophie.ls@altivex.com', 'Sophie Lee-Shing', 'admin', NULL, '2025-10-01T09:15:00+04:00', '2025-10-01T09:15:00+04:00'),
+  ('usr_006', 'david.tq@altivex.com', 'David Tran Quang', 'admin', NULL, '2025-10-01T09:30:00+04:00', '2025-10-01T09:30:00+04:00'),
+  ('usr_007', 'anusha.b@altivex.com', 'Anusha Bheekhoo', 'admin', NULL, '2025-10-01T10:00:00+04:00', '2025-10-01T10:00:00+04:00'),
+  ('usr_008', 'stephane.z@altivex.com', 'Chef Stephane Zavatone', 'consultant', NULL, '2025-11-15T10:00:00+04:00', '2025-11-15T10:00:00+04:00'),
+  ('usr_009', 'mc.hoarau@altivex.com', 'Marie-Claire Hoarau', 'committee_member', NULL, '2025-10-15T09:00:00+04:00', '2025-10-15T09:00:00+04:00'),
+  ('usr_010', 'rajesh.d@altivex.com', 'Rajesh Doorgakant', 'committee_member', NULL, '2025-10-15T09:30:00+04:00', '2025-10-15T09:30:00+04:00'),
+  ('usr_011', 'contact@tourism.gov.mu', 'Ministry of Tourism', 'viewer', NULL, '2025-12-01T10:00:00+04:00', '2025-12-01T10:00:00+04:00'),
+  ('usr_012', 'info@mtpa.mu', 'Mauritius Tourism Promotion Authority', 'viewer', NULL, '2025-12-01T10:15:00+04:00', '2025-12-01T10:15:00+04:00'),
+  ('usr_013', 'info@fsa.mu', 'Food Security Authority', 'viewer', NULL, '2025-12-01T10:30:00+04:00', '2025-12-01T10:30:00+04:00'),
+  ('usr_014', 'events@luxhotels.com', 'LUX Resorts and Hotels', 'viewer', NULL, '2025-12-01T11:00:00+04:00', '2025-12-01T11:00:00+04:00'),
+  ('usr_015', 'partnerships@airmauritius.com', 'Air Mauritius', 'viewer', NULL, '2025-12-01T11:15:00+04:00', '2025-12-01T11:15:00+04:00'),
+  ('usr_016', 'production@mbc.int', 'MBC Television', 'viewer', NULL, '2025-12-01T11:30:00+04:00', '2025-12-01T11:30:00+04:00'),
+  ('usr_017', 'contact@ehoi.mu', 'Ecole Hoteliere de lOcean Indien', 'viewer', NULL, '2025-12-01T12:00:00+04:00', '2025-12-01T12:00:00+04:00'),
+  ('usr_018', 'meera.n@altivex.com', 'Meera Nundlah', 'committee_member', NULL, '2026-01-10T08:00:00+04:00', '2026-01-10T08:00:00+04:00'),
+  ('usr_019', 'alex.t@mymail.com', 'Alex Torres', 'viewer', NULL, '2026-06-01T10:00:00+04:00', '2026-06-01T10:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- 2. CONSULTANTS (6)
+-- ============================================================================
+
+INSERT INTO consultants (id, user_id, name, email, specialization, bio, daily_rate, currency, phone, created_at, updated_at)
+VALUES
+  ('con_001', 'usr_008', 'Chef Stephane Zavatone', 'stephane.z@altivex.com',
+   ARRAY['French Cuisine', 'Patisserie', 'Haute Cuisine'],
+   'Award-winning French-trained chef with 20 years of experience in haute cuisine and patisserie. Former head chef at Le Trianon, Paris.',
+   35000.00, 'MUR', '+230 5 768 0001', '2025-11-15T10:00:00+04:00', '2025-11-15T10:00:00+04:00'),
+  ('con_002', NULL, 'Laurent Beaumont', 'l.beaumont@consulting.mu',
+   ARRAY['TV Production', 'Show Format Design', 'Entertainment'],
+   'Television production specialist with 15 years in culinary show format development. Produced cooking competitions across Europe and Asia.',
+   42000.00, 'MUR', '+230 5 768 0002', '2025-11-20T09:00:00+04:00', '2025-11-20T09:00:00+04:00'),
+  ('con_003', NULL, 'Dr. Anjali Deerpalsingh', 'a.deerpalsingh@foodlab.mu',
+   ARRAY['Food Science', 'Quality Assurance', 'HACCP'],
+   'Food scientist and quality assurance expert specializing in HACCP, ISO 22000, and local food standards development for the Indian Ocean region.',
+   38000.00, 'MUR', '+230 5 768 0003', '2025-11-25T10:00:00+04:00', '2025-11-25T10:00:00+04:00'),
+  ('con_004', NULL, 'Marco Di Napoli', 'm.dinapoli@cuisine-intl.com',
+   ARRAY['Italian Cuisine', 'Event Management', 'Catering'],
+   'Italian-born culinary expert and event manager with extensive experience coordinating international food festivals across the Mediterranean.',
+   40000.00, 'MUR', '+230 5 768 0004', '2025-12-01T08:00:00+04:00', '2025-12-01T08:00:00+04:00'),
+  ('con_005', NULL, 'Fatima Lollmahamad', 'f.lollmahamad@brandstrategy.mu',
+   ARRAY['Brand Strategy', 'Marketing', 'Digital Media'],
+   'Brand strategist specializing in food and hospitality marketing. Led award-winning campaigns for Michelin-starred restaurants and food brands.',
+   32000.00, 'MUR', '+230 5 768 0005', '2025-12-05T09:00:00+04:00', '2025-12-05T09:00:00+04:00'),
+  ('con_006', NULL, 'Hiroshi Tanaka', 'h.tanaka@pacific-culinary.jp',
+   ARRAY['Festival Curation', 'International Relations', 'Asian Cuisine'],
+   'Japanese-Singaporean food curator specializing in international festival programming and cross-cultural culinary exchange.',
+   45000.00, 'MUR', '+230 5 768 0006', '2025-12-10T10:00:00+04:00', '2025-12-10T10:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+-- ============================================================================
+-- 3. COMMITTEES (1)
+-- ============================================================================
+
+INSERT INTO committees (id, name, description, type, parent_committee_id, project_id)
+VALUES
+  ('com_001', 'The Founding Committee',
+   'The founding governance body of Altivex responsible for strategic oversight of all culinary events projects, including budget approval, project prioritisation, and stakeholder engagement.',
+   'executive', NULL, NULL)
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- 4. COMMITTEE MEMBERS (6)
+-- ============================================================================
+
+INSERT INTO committee_members (id, committee_id, user_id, consultant_id, member_role, joined_at)
+VALUES
+  ('cm_001', 'com_001', 'usr_002', NULL, 'chair',   '2025-10-01T08:00:00+04:00'),
+  ('cm_002', 'com_001', 'usr_003', NULL, 'member',  '2025-10-01T08:30:00+04:00'),
+  ('cm_003', 'com_001', 'usr_004', NULL, 'member',  '2025-10-01T09:00:00+04:00'),
+  ('cm_004', 'com_001', 'usr_005', NULL, 'member',  '2025-10-01T09:15:00+04:00'),
+  ('cm_005', 'com_001', 'usr_006', NULL, 'member',  '2025-10-01T09:30:00+04:00'),
+  ('cm_006', 'com_001', 'usr_007', NULL, 'member',  '2025-10-01T10:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- 5. PROJECTS (6)
+-- ============================================================================
+
+INSERT INTO projects (id, name, description, status, priority, committee_id, owner_id,
+                      budget_estimated, budget_approved, budget_spent, budget_currency,
+                      timeline_start_date, timeline_end_date, tags, created_at, updated_at)
+VALUES
+  ('prj_001', 'Food Titan Challenge',
+   'A culinary reality TV competition pitting Mauritius most talented home cooks and professional chefs against each other in weekly challenges. Broadcast on MBC with digital-first supplementary content.',
+   'in_progress', 'critical', 'com_001', 'usr_002',
+   12500000.00, 12000000.00, 3800000.00, 'MUR',
+   '2026-01-01', '2026-12-31',
+   ARRAY['culinary', 'tv', 'competition', 'reality-show'],
+   '2025-10-15T08:00:00+04:00', '2026-07-01T08:00:00+04:00'),
+  ('prj_002', 'Les Innovations Gourmandes',
+   'A confectionery and patisserie innovation competition celebrating Mauritian pastry arts. Open to professional patissiers and culinary students, showcasing modern techniques with local flavours.',
+   'planning', 'high', 'com_001', 'usr_003',
+   8200000.00, 8000000.00, 500000.00, 'MUR',
+   '2026-09-01', '2027-03-31',
+   ARRAY['culinary', 'competition', 'patisserie', 'innovation'],
+   '2026-02-10T09:00:00+04:00', '2026-06-15T09:00:00+04:00'),
+  ('prj_003', 'Moris Otantik',
+   'A national quality label and certification programme requiring participating restaurants and food vendors to source at least 80 percent of ingredients locally. Designed to boost Mauritian agriculture and culinary identity.',
+   'in_progress', 'critical', 'com_001', 'usr_002',
+   18500000.00, 18000000.00, 6200000.00, 'MUR',
+   '2025-11-01', '2027-10-31',
+   ARRAY['quality', 'certification', 'local-ingredients', 'national'],
+   '2025-10-20T08:00:00+04:00', '2026-07-10T08:00:00+04:00'),
+  ('prj_004', 'MACC - Maitre Artisan de la Cuisine Creole',
+   'A prestigious distinction programme recognising master artisans of Creole cuisine. Culminates in an annual ceremony honouring chefs who preserve and innovate Mauritian Creole culinary heritage.',
+   'planning', 'high', 'com_001', 'usr_002',
+   5500000.00, 5000000.00, 300000.00, 'MUR',
+   '2026-08-01', '2027-02-28',
+   ARRAY['culinary', 'distinction', 'creole-cuisine', 'heritage'],
+   '2026-03-05T10:00:00+04:00', '2026-06-20T10:00:00+04:00'),
+  ('prj_005', 'Cooking Talent - Sous la Main du Chef',
+   'A television and online cooking show following aspiring chefs as they train under established masters. Combines entertainment with culinary education, distributed across TV and streaming platforms.',
+   'envision', 'medium', 'com_001', 'usr_006',
+   9800000.00, NULL, 0.00, 'MUR',
+   '2027-01-01', '2027-06-30',
+   ARRAY['culinary', 'tv', 'online', 'cooking-show'],
+   '2026-04-12T09:00:00+04:00', '2026-06-01T09:00:00+04:00'),
+  ('prj_006', 'Le Festival International Des Saveurs',
+   'An annual international food festival hosted in Mauritius, bringing together world-class chefs, food artisans, and culinary traditions from across the globe to celebrate global gastronomy.',
+   'envision', 'medium', 'com_001', 'usr_003',
+   NULL, 0, 0.00, 'MUR',
+   '2027-03-01', '2027-05-31',
+   ARRAY['festival', 'international', 'food', 'cultural'],
+   '2026-05-20T08:00:00+04:00', '2026-06-15T08:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+-- ============================================================================
+-- 6. PROJECT PHASES (13)
+-- ============================================================================
+
+INSERT INTO project_phases (id, project_id, name, description, status, start_date, end_date, order_index, created_at, updated_at)
+VALUES
+  ('ph_001', 'prj_001', 'Concept Development and Casting',
+   'Finalise the show format bible, recruit judges, design the competition structure, and conduct open casting calls across Mauritius.',
+   'completed', '2026-01-01', '2026-04-30', 1,
+   '2025-10-15T08:00:00+04:00', '2026-05-01T08:00:00+04:00'),
+  ('ph_002', 'prj_001', 'Studio Production',
+   'Construct and equip the studio set, film all competition episodes, manage contestants, and coordinate weekly challenge logistics.',
+   'in_progress', '2026-05-01', '2026-09-30', 2,
+   '2025-10-15T08:00:00+04:00', '2026-05-01T08:00:00+04:00'),
+  ('ph_003', 'prj_001', 'Broadcast and Post-Production',
+   'Edit episodes, manage the broadcast schedule on MBC, run the digital content campaign, and evaluate audience metrics.',
+   'not_started', '2026-10-01', '2026-12-31', 3,
+   '2025-10-15T08:00:00+04:00', '2025-10-15T08:00:00+04:00'),
+  ('ph_004', 'prj_002', 'Recipe Development and Selection',
+   'Open competition entries, organise regional selection rounds, and curate the shortlist of innovative confectionery and patisserie creations.',
+   'not_started', '2026-09-01', '2026-12-31', 1,
+   '2026-02-10T09:00:00+04:00', '2026-02-10T09:00:00+04:00'),
+  ('ph_005', 'prj_002', 'National Competition Finals',
+   'Host the live national finals event, judge entries with an international jury, and award prizes to winning patissiers.',
+   'not_started', '2027-01-01', '2027-03-31', 2,
+   '2026-02-10T09:00:00+04:00', '2026-02-10T09:00:00+04:00'),
+  ('ph_006', 'prj_003', 'Research and Standards Development',
+   'Conduct baseline research on local ingredient sourcing, draft the Moris Otantik quality standards, and obtain government endorsement.',
+   'completed', '2025-11-01', '2026-03-31', 1,
+   '2025-10-20T08:00:00+04:00', '2026-04-01T08:00:00+04:00'),
+  ('ph_007', 'prj_003', 'Pilot Certification',
+   'Pilot the certification programme with 10 restaurants, refine the audit process, and build the local ingredient supply directory.',
+   'in_progress', '2026-04-01', '2026-12-31', 2,
+   '2025-10-20T08:00:00+04:00', '2026-04-01T08:00:00+04:00'),
+  ('ph_008', 'prj_003', 'National Rollout',
+   'Scale the certification nationwide, onboard 50+ restaurants, launch the Moris Otantik consumer label and marketing campaign.',
+   'not_started', '2027-01-01', '2027-10-31', 3,
+   '2025-10-20T08:00:00+04:00', '2025-10-20T08:00:00+04:00'),
+  ('ph_009', 'prj_004', 'Curriculum and Assessment Design',
+   'Design the MACC assessment criteria, develop the tasting evaluation framework, and establish the nomination process for candidate chefs.',
+   'not_started', '2026-08-01', '2026-12-31', 1,
+   '2026-03-05T10:00:00+04:00', '2026-03-05T10:00:00+04:00'),
+  ('ph_010', 'prj_004', 'Inaugural Awards Ceremony',
+   'Organise and host the inaugural MACC ceremony, invite dignitaries, and publicise the first cohort of distinguished Creole cuisine artisans.',
+   'not_started', '2027-01-01', '2027-02-28', 2,
+   '2026-03-05T10:00:00+04:00', '2026-03-05T10:00:00+04:00'),
+  ('ph_011', 'prj_005', 'Format Concept and Pilot',
+   'Develop the show concept, design the kitchen set, recruit a host and contestants, and produce a pilot episode for stakeholder review.',
+   'not_started', '2027-01-01', '2027-03-31', 1,
+   '2026-04-12T09:00:00+04:00', '2026-04-12T09:00:00+04:00'),
+  ('ph_012', 'prj_005', 'Season Production',
+   'Film the full first season, manage post-production, and coordinate distribution across television and online platforms.',
+   'not_started', '2027-04-01', '2027-06-30', 2,
+   '2026-04-12T09:00:00+04:00', '2026-04-12T09:00:00+04:00'),
+  ('ph_013', 'prj_006', 'Festival Planning and Logistics',
+   'Secure the venue, invite international chefs and vendors, design the festival programme, manage logistics, and coordinate marketing.',
+   'not_started', '2027-03-01', '2027-05-31', 1,
+   '2026-05-20T08:00:00+04:00', '2026-05-20T08:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- 7. PROJECT SERVICES (6)
+-- ============================================================================
+
+INSERT INTO project_services (id, project_id, name, description, category, created_at, updated_at)
+VALUES
+  ('srv_001', 'prj_001', 'Full TV Production Package',
+   'End-to-end television production services including studio build, filming, editing, and broadcast coordination for the Food Titan Challenge series.',
+   'production', '2025-10-15T08:00:00+04:00', '2025-10-15T08:00:00+04:00'),
+  ('srv_002', 'prj_002', 'Competition Event Management',
+   'Full competition lifecycle management including entry collection, regional selections, jury coordination, and national finals event execution.',
+   'events', '2026-02-10T09:00:00+04:00', '2026-02-10T09:00:00+04:00'),
+  ('srv_003', 'prj_003', 'Quality Certification Audit Services',
+   'Independent audit and certification services for Moris Otantik, including on-site restaurant assessments, compliance verification, and label issuance.',
+   'certification', '2025-10-20T08:00:00+04:00', '2025-10-20T08:00:00+04:00'),
+  ('srv_004', 'prj_004', 'Culinary Skills Assessment and Evaluation',
+   'Design and delivery of the MACC assessment programme including tasting panels, technical evaluation, and heritage knowledge scoring.',
+   'assessment', '2026-03-05T10:00:00+04:00', '2026-03-05T10:00:00+04:00'),
+  ('srv_005', 'prj_005', 'Multi-Platform Media Production',
+   'Integrated media production for television broadcast and online streaming, including filming, editing, graphics, and platform distribution.',
+   'media', '2026-04-12T09:00:00+04:00', '2026-04-12T09:00:00+04:00'),
+  ('srv_006', 'prj_006', 'International Festival Coordination',
+   'Full-service festival logistics including venue management, international artist coordination, vendor management, and visitor experience design.',
+   'logistics', '2026-05-20T08:00:00+04:00', '2026-05-20T08:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- 8. PROJECT PROVIDERS (6)
+-- ============================================================================
+
+INSERT INTO project_providers (id, project_id, name, description, contact_email, contact_phone, created_at, updated_at)
+VALUES
+  ('prv_001', 'prj_001', 'MBC Television Production',
+   'Mauritius Broadcasting Corporation - exclusive broadcast partner for the Food Titan Challenge, providing studio facilities and airtime.',
+   'production@mbc.int', '+230 4 000 0001', '2025-10-15T08:00:00+04:00', '2025-10-15T08:00:00+04:00'),
+  ('prv_002', 'prj_002', 'Mauritius Chefs Association',
+   'Professional association of Mauritian chefs providing jury members, competition infrastructure, and industry expertise for Les Innovations Gourmandes.',
+   'info@mauritiuschefs.mu', '+230 4 000 0002', '2026-02-10T09:00:00+04:00', '2026-02-10T09:00:00+04:00'),
+  ('prv_003', 'prj_003', 'National Food Laboratory',
+   'Government-accredited food testing laboratory providing ingredient analysis, sourcing verification, and compliance testing for Moris Otantik certification.',
+   'info@nfl.mu', '+230 4 000 0003', '2025-10-20T08:00:00+04:00', '2025-10-20T08:00:00+04:00'),
+  ('prv_004', 'prj_004', 'Institut de la Creation Culinaire',
+   'Premier culinary institute providing assessment facilities, evaluation experts, and heritage cuisine research for the MACC programme.',
+   'contact@icc.mu', '+230 4 000 0004', '2026-03-05T10:00:00+04:00', '2026-03-05T10:00:00+04:00'),
+  ('prv_005', 'prj_005', 'Plus Media Studios',
+   'Full-service media production house offering studio facilities, editing suites, and post-production services for Cooking Talent.',
+   'hello@plusmedia.mu', '+230 4 000 0005', '2026-04-12T09:00:00+04:00', '2026-04-12T09:00:00+04:00'),
+  ('prv_006', 'prj_006', 'Events Mauritius Ltd',
+   'Leading event management company specialising in large-scale international festivals, providing venue, logistics, and visitor management.',
+   'info@eventsmauritius.mu', '+230 4 000 0006', '2026-05-20T08:00:00+04:00', '2026-05-20T08:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- 9. SERVICE PROVIDERS - join table (6)
+-- ============================================================================
+
+INSERT INTO service_providers (id, service_id, provider_id, created_at)
+VALUES
+  ('sp_001', 'srv_001', 'prv_001', '2025-10-15T08:00:00+04:00'),
+  ('sp_002', 'srv_002', 'prv_002', '2026-02-10T09:00:00+04:00'),
+  ('sp_003', 'srv_003', 'prv_003', '2025-10-20T08:00:00+04:00'),
+  ('sp_004', 'srv_004', 'prv_004', '2026-03-05T10:00:00+04:00'),
+  ('sp_005', 'srv_005', 'prv_005', '2026-04-12T09:00:00+04:00'),
+  ('sp_006', 'srv_006', 'prv_006', '2026-05-20T08:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+-- ============================================================================
+-- 10. STAKEHOLDERS (14)
+-- ============================================================================
+
+INSERT INTO stakeholders (id, project_id, name, category, user_id, email, phone, organization, notes, created_at, updated_at)
+VALUES
+  ('sth_001', 'prj_003', 'Ministry of Tourism', 'government', NULL,
+   'contact@tourism.gov.mu', '+230 2 000 0001', 'Ministry of Tourism, Arts and Culture',
+   'Key governmental partner for the Moris Otantik national label. Provides policy endorsement and co-branding support.',
+   '2025-11-01T08:00:00+04:00', '2025-11-01T08:00:00+04:00'),
+  ('sth_002', 'prj_006', 'Mauritius Tourism Promotion Authority', 'government', NULL,
+   'info@mtpa.mu', '+230 2 000 0002', 'MTPA',
+   'Government tourism body supporting the international food festival with marketing reach and international visitor promotion.',
+   '2025-12-01T10:00:00+04:00', '2025-12-01T10:00:00+04:00'),
+  ('sth_003', 'prj_003', 'Food Security Authority', 'government', NULL,
+   'info@fsa.mu', '+230 2 000 0003', 'Food Security Authority of Mauritius',
+   'Regulatory body overseeing local ingredient supply chains and food safety standards relevant to the Moris Otantik certification.',
+   '2025-11-15T08:00:00+04:00', '2025-11-15T08:00:00+04:00'),
+  ('sth_004', 'prj_001', 'LUX Resorts and Hotels', 'sponsor', NULL,
+   'events@luxhotels.com', '+230 2 000 0004', 'LUX* Resorts and Hotels',
+   'Premium hospitality sponsor for the Food Titan Challenge, providing venue support and hospitality for contestants and judges.',
+   '2025-12-10T09:00:00+04:00', '2025-12-10T09:00:00+04:00'),
+  ('sth_005', 'prj_006', 'Air Mauritius', 'sponsor', NULL,
+   'partnerships@airmauritius.com', '+230 2 000 0005', 'Air Mauritius',
+   'National airline sponsor for the international food festival, providing travel support for visiting international chefs and media.',
+   '2025-12-15T10:00:00+04:00', '2025-12-15T10:00:00+04:00'),
+  ('sth_006', 'prj_001', 'MBC Television', 'media', NULL,
+   'production@mbc.int', '+230 2 000 0006', 'Mauritius Broadcasting Corporation',
+   'Exclusive broadcast partner for the Food Titan Challenge, providing airtime, studio facilities, and production support.',
+   '2025-10-15T08:00:00+04:00', '2025-10-15T08:00:00+04:00'),
+  ('sth_007', 'prj_004', 'Ecole Hoteliere de lOcean Indien', 'academic', NULL,
+   'contact@ehoi.mu', '+230 2 000 0007', 'EHOI',
+   'Premier hospitality school in Mauritius providing academic support, culinary research, and candidate nominations for the MACC distinction.',
+   '2026-03-10T10:00:00+04:00', '2026-03-10T10:00:00+04:00'),
+  ('sth_008', 'prj_001', 'Chef Arvin Ramdin', 'executive', 'usr_002',
+   'arvin.ramdin@altivex.com', '+230 5 768 0010', 'Altivex',
+   'Project owner and executive sponsor of the Food Titan Challenge. Provides culinary direction and industry connections.',
+   '2025-10-15T08:00:00+04:00', '2025-10-15T08:00:00+04:00'),
+  ('sth_009', 'prj_002', 'Priya Nundlah', 'executive', 'usr_003',
+   'priya.nundlah@altivex.com', '+230 5 768 0011', 'Altivex',
+   'Project owner and executive sponsor of Les Innovations Gourmandes. Oversees project delivery and stakeholder coordination.',
+   '2026-02-10T09:00:00+04:00', '2026-02-10T09:00:00+04:00'),
+  ('sth_010', 'prj_003', 'Le Mauricien Newspaper', 'media', NULL,
+   'editorial@lemauricien.mu', '+230 2 000 0010', 'Le Mauricien',
+   'Leading Mauritian newspaper providing media coverage and public awareness for the Moris Otantik certification programme.',
+   '2026-01-20T09:00:00+04:00', '2026-01-20T09:00:00+04:00'),
+  ('sth_011', 'prj_006', 'Sun Resorts', 'sponsor', NULL,
+   'partnerships@sunresorts.com', '+230 2 000 0011', 'Sun Resorts',
+   'Hospitality sponsor offering venue and accommodation packages for international festival participants and VIP guests.',
+   '2026-01-05T10:00:00+04:00', '2026-01-05T10:00:00+04:00'),
+  ('sth_012', 'prj_003', 'University of Mauritius', 'academic', NULL,
+   'research@uom.mu', '+230 2 000 0012', 'University of Mauritius',
+   'Academic partner providing agricultural research, local ingredient data analysis, and impact assessment for the Moris Otantik programme.',
+   '2025-12-01T08:00:00+04:00', '2025-12-01T08:00:00+04:00'),
+  ('sth_013', 'prj_003', 'Mauritius Standards Bureau', 'external', NULL,
+   'info@msb.int', '+230 2 000 0013', 'MSB',
+   'National standards body responsible for certifying and accrediting the Moris Otantik quality standards and labelling process.',
+   '2025-11-20T08:00:00+04:00', '2025-11-20T08:00:00+04:00'),
+  ('sth_014', 'prj_001', 'Canal+ Austral', 'external', NULL,
+   'rights@canalplus.mu', '+230 2 000 0014', 'Canal+ Austral',
+   'Potential syndication partner for international distribution of the Food Titan Challenge across the Indian Ocean region.',
+   '2026-03-15T10:00:00+04:00', '2026-03-15T10:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+-- ============================================================================
+-- 11. MEETINGS (8)
+-- ============================================================================
+
+INSERT INTO meetings (id, project_id, committee_id, title, description, status, scheduled_at, duration, location, created_at, updated_at)
+VALUES
+  ('mtg_001', 'prj_001', NULL, 'Food Titan Kickoff Meeting',
+   'Initial kickoff meeting to align on project scope, timeline, budget, and role assignments for the Food Titan Challenge.',
+   'completed', '2026-01-15T10:00:00+04:00', 90, 'Altivex Boardroom, Port Louis',
+   '2026-01-10T08:00:00+04:00', '2026-01-15T12:00:00+04:00'),
+  ('mtg_002', 'prj_001', NULL, 'Sponsorship Strategy Review',
+   'Review of the sponsorship acquisition strategy, partnership proposals, and revenue targets for the Food Titan Challenge.',
+   'completed', '2026-03-20T14:00:00+04:00', 120, 'Altivex Boardroom, Port Louis',
+   '2026-03-15T08:00:00+04:00', '2026-03-20T16:30:00+04:00'),
+  ('mtg_003', 'prj_002', NULL, 'Les Innovations Planning Session',
+   'Planning session to define the competition format, jury selection process, venue requirements, and marketing timeline.',
+   'completed', '2026-06-10T09:00:00+04:00', 120, 'Video Conference (Zoom)',
+   '2026-06-05T08:00:00+04:00', '2026-06-10T11:30:00+04:00'),
+  ('mtg_004', 'prj_003', NULL, 'Moris Otantik Standards Review',
+   'Technical review of the draft quality standards document, local ingredient thresholds, and certification audit criteria.',
+   'completed', '2025-12-05T10:00:00+04:00', 150, 'Food Innovation Hub, Curepipe',
+   '2025-12-01T08:00:00+04:00', '2025-12-05T13:00:00+04:00'),
+  ('mtg_005', 'prj_003', NULL, 'Certification Pilot Progress Review',
+   'Mid-pilot review of the first 10 restaurant certifications, audit findings, and local ingredient supply chain updates.',
+   'completed', '2026-05-15T10:00:00+04:00', 90, 'Mauritius Convention Centre, Ebene',
+   '2026-05-10T08:00:00+04:00', '2026-05-15T12:00:00+04:00'),
+  ('mtg_006', 'prj_004', NULL, 'MACC Curriculum Workshop',
+   'Workshop to design the MACC assessment framework, define evaluation criteria, and establish the nomination and judging process.',
+   'completed', '2026-07-01T09:00:00+04:00', 180, 'Ecole Hoteliere, Ebene',
+   '2026-06-25T08:00:00+04:00', '2026-07-01T13:00:00+04:00'),
+  ('mtg_007', 'prj_005', NULL, 'Cooking Talent Format Discussion',
+   'Concept review meeting to discuss the show format, host selection criteria, and platform distribution strategy.',
+   'scheduled', '2026-08-20T10:00:00+04:00', 90, 'Altivex Creative Lab, Port Louis',
+   '2026-08-10T08:00:00+04:00', '2026-08-10T08:00:00+04:00'),
+  ('mtg_008', 'prj_006', NULL, 'Festival Initial Planning',
+   'Exploratory planning session to discuss festival scope, international partnerships, venue options, and preliminary budget.',
+   'scheduled', '2026-09-10T10:00:00+04:00', 120, 'Hotel and Spa Saint Geran, Poste de Flacq',
+   '2026-09-01T08:00:00+04:00', '2026-09-01T08:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- 12. MEETING ATTENDEES (32)
+-- ============================================================================
+
+INSERT INTO meeting_attendees (id, meeting_id, user_id, consultant_id, attended, role)
+VALUES
+  -- mtg_001: Food Titan Kickoff (4)
+  ('ma_001', 'mtg_001', 'usr_002', NULL, true, 'chair'),
+  ('ma_002', 'mtg_001', 'usr_003', NULL, true, 'participant'),
+  ('ma_003', 'mtg_001', 'usr_006', NULL, true, 'participant'),
+  ('ma_004', 'mtg_001', NULL, 'con_001', true, 'presenter'),
+  -- mtg_002: Sponsorship Strategy Review (4)
+  ('ma_005', 'mtg_002', 'usr_002', NULL, true, 'chair'),
+  ('ma_006', 'mtg_002', 'usr_007', NULL, true, 'participant'),
+  ('ma_007', 'mtg_002', 'usr_006', NULL, true, 'participant'),
+  ('ma_008', 'mtg_002', NULL, 'con_005', true, 'presenter'),
+  -- mtg_003: Les Innovations Planning (4)
+  ('ma_009', 'mtg_003', 'usr_003', NULL, true, 'chair'),
+  ('ma_010', 'mtg_003', 'usr_004', NULL, true, 'participant'),
+  ('ma_011', 'mtg_003', 'usr_005', NULL, true, 'participant'),
+  ('ma_012', 'mtg_003', NULL, 'con_002', true, 'presenter'),
+  -- mtg_004: Moris Otantik Standards Review (4)
+  ('ma_013', 'mtg_004', 'usr_003', NULL, true, 'chair'),
+  ('ma_014', 'mtg_004', 'usr_004', NULL, true, 'participant'),
+  ('ma_015', 'mtg_004', NULL, 'con_003', true, 'presenter'),
+  ('ma_016', 'mtg_004', 'usr_009', NULL, true, 'participant'),
+  -- mtg_005: Certification Pilot Progress (4)
+  ('ma_017', 'mtg_005', 'usr_003', NULL, true, 'chair'),
+  ('ma_018', 'mtg_005', NULL, 'con_003', true, 'presenter'),
+  ('ma_019', 'mtg_005', 'usr_009', NULL, true, 'participant'),
+  ('ma_020', 'mtg_005', 'usr_010', NULL, true, 'participant'),
+  -- mtg_006: MACC Curriculum Workshop (4)
+  ('ma_021', 'mtg_006', 'usr_003', NULL, true, 'chair'),
+  ('ma_022', 'mtg_006', 'usr_004', NULL, true, 'participant'),
+  ('ma_023', 'mtg_006', NULL, 'con_004', true, 'presenter'),
+  ('ma_024', 'mtg_006', 'usr_009', NULL, true, 'participant'),
+  -- mtg_007: Cooking Talent Format Discussion (4)
+  ('ma_025', 'mtg_007', 'usr_003', NULL, true, 'chair'),
+  ('ma_026', 'mtg_007', 'usr_006', NULL, true, 'participant'),
+  ('ma_027', 'mtg_007', NULL, 'con_002', true, 'presenter'),
+  ('ma_028', 'mtg_007', 'usr_010', NULL, true, 'participant'),
+  -- mtg_008: Festival Initial Planning (4)
+  ('ma_029', 'mtg_008', 'usr_003', NULL, true, 'chair'),
+  ('ma_030', 'mtg_008', 'usr_004', NULL, true, 'participant'),
+  ('ma_031', 'mtg_008', 'usr_006', NULL, true, 'participant'),
+  ('ma_032', 'mtg_008', NULL, 'con_006', true, 'presenter')
+ON CONFLICT (id) DO NOTHING;
+-- ============================================================================
+-- 13. MILESTONES (20)
+-- ============================================================================
+
+INSERT INTO milestones (id, project_id, phase_id, name, due_date, completed, completed_at, created_at, updated_at)
+VALUES
+  -- Food Titan Challenge (4)
+  ('ms_001', 'prj_001', 'ph_001', 'Pilot Episode Filmed',
+   '2026-02-28', true, '2026-02-26T16:00:00+04:00',
+   '2025-10-15T08:00:00+04:00', '2026-02-26T16:00:00+04:00'),
+  ('ms_002', 'prj_001', 'ph_001', 'Casting Complete',
+   '2026-03-15', true, '2026-03-12T14:00:00+04:00',
+   '2025-10-15T08:00:00+04:00', '2026-03-12T14:00:00+04:00'),
+  ('ms_003', 'prj_001', 'ph_002', 'Season Premiere',
+   '2026-07-15', false, NULL,
+   '2025-10-15T08:00:00+04:00', '2025-10-15T08:00:00+04:00'),
+  ('ms_004', 'prj_001', 'ph_003', 'Grand Finale Aired',
+   '2026-12-20', false, NULL,
+   '2025-10-15T08:00:00+04:00', '2025-10-15T08:00:00+04:00'),
+  -- Les Innovations Gourmandes (3)
+  ('ms_005', 'prj_002', 'ph_004', 'Recipe Submissions Open',
+   '2026-10-01', false, NULL,
+   '2026-02-10T09:00:00+04:00', '2026-02-10T09:00:00+04:00'),
+  ('ms_006', 'prj_002', 'ph_004', 'Regional Selections Complete',
+   '2026-12-15', false, NULL,
+   '2026-02-10T09:00:00+04:00', '2026-02-10T09:00:00+04:00'),
+  ('ms_007', 'prj_002', 'ph_005', 'National Finals Event',
+   '2027-03-15', false, NULL,
+   '2026-02-10T09:00:00+04:00', '2026-02-10T09:00:00+04:00'),
+  -- Moris Otantik (4)
+  ('ms_008', 'prj_003', 'ph_006', 'Standards Document Approved',
+   '2026-02-28', true, '2026-02-10T11:00:00+04:00',
+   '2025-10-20T08:00:00+04:00', '2026-02-10T11:00:00+04:00'),
+  ('ms_009', 'prj_003', 'ph_007', 'First 10 Restaurants Certified',
+   '2026-06-30', true, '2026-06-20T15:00:00+04:00',
+   '2025-10-20T08:00:00+04:00', '2026-06-20T15:00:00+04:00'),
+  ('ms_010', 'prj_003', 'ph_007', '50 Restaurants Certified',
+   '2026-12-31', false, NULL,
+   '2025-10-20T08:00:00+04:00', '2025-10-20T08:00:00+04:00'),
+  ('ms_011', 'prj_003', 'ph_008', 'National Label Launched',
+   '2027-06-30', false, NULL,
+   '2025-10-20T08:00:00+04:00', '2025-10-20T08:00:00+04:00'),
+  -- MACC (3)
+  ('ms_012', 'prj_004', 'ph_009', 'Assessment Framework Approved',
+   '2026-11-30', false, NULL,
+   '2026-03-05T10:00:00+04:00', '2026-03-05T10:00:00+04:00'),
+  ('ms_013', 'prj_004', 'ph_009', 'First Cohort Nominated',
+   '2026-12-15', false, NULL,
+   '2026-03-05T10:00:00+04:00', '2026-03-05T10:00:00+04:00'),
+  ('ms_014', 'prj_004', 'ph_010', 'Inaugural Ceremony Held',
+   '2027-02-15', false, NULL,
+   '2026-03-05T10:00:00+04:00', '2026-03-05T10:00:00+04:00'),
+  -- Cooking Talent (3)
+  ('ms_015', 'prj_005', 'ph_011', 'Show Format Finalized',
+   '2027-02-28', false, NULL,
+   '2026-04-12T09:00:00+04:00', '2026-04-12T09:00:00+04:00'),
+  ('ms_016', 'prj_005', 'ph_011', 'Pilot Episode Recorded',
+   '2027-03-31', false, NULL,
+   '2026-04-12T09:00:00+04:00', '2026-04-12T09:00:00+04:00'),
+  ('ms_017', 'prj_005', 'ph_012', 'Season 1 Premiere',
+   '2027-05-15', false, NULL,
+   '2026-04-12T09:00:00+04:00', '2026-04-12T09:00:00+04:00'),
+  -- Festival (3)
+  ('ms_018', 'prj_006', 'ph_013', 'Venue Secured',
+   '2027-01-15', false, NULL,
+   '2026-05-20T08:00:00+04:00', '2026-05-20T08:00:00+04:00'),
+  ('ms_019', 'prj_006', 'ph_013', 'International Chefs Confirmed',
+   '2027-02-28', false, NULL,
+   '2026-05-20T08:00:00+04:00', '2026-05-20T08:00:00+04:00'),
+  ('ms_020', 'prj_006', 'ph_013', 'Festival Launch Day',
+   '2027-05-01', false, NULL,
+   '2026-05-20T08:00:00+04:00', '2026-05-20T08:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- 14. KPIs (10)
+-- ============================================================================
+
+INSERT INTO kpis (id, project_id, phase_id, name, description, category, target_value, current_value, unit, created_at, updated_at)
+VALUES
+  ('kpi_001', 'prj_001', NULL, 'Viewer Engagement Rate',
+   'Percentage of viewers who watch at least 75 percent of each episode.',
+   'project', 85.00, 0.00, '%',
+   '2025-10-15T08:00:00+04:00', '2026-07-01T08:00:00+04:00'),
+  ('kpi_002', 'prj_001', NULL, 'Sponsorship Revenue',
+   'Total revenue generated from corporate sponsorships for the Food Titan Challenge.',
+   'financial', 5000000.00, 1200000.00, 'MUR',
+   '2025-10-15T08:00:00+04:00', '2026-07-01T08:00:00+04:00'),
+  ('kpi_003', 'prj_002', NULL, 'Competition Entries',
+   'Total number of valid recipe submissions received for the competition.',
+   'project', 200.00, 0.00, 'entries',
+   '2026-02-10T09:00:00+04:00', '2026-06-15T09:00:00+04:00'),
+  ('kpi_004', 'prj_003', NULL, 'Restaurants Certified',
+   'Number of restaurants that have achieved Moris Otantik certification.',
+   'project', 80.00, 12.00, 'restaurants',
+   '2025-10-20T08:00:00+04:00', '2026-07-10T08:00:00+04:00'),
+  ('kpi_005', 'prj_003', NULL, 'Local Ingredient Compliance',
+   'Average percentage of locally sourced ingredients across certified restaurants.',
+   'phase', 80.00, 72.00, '%',
+   '2025-10-20T08:00:00+04:00', '2026-07-10T08:00:00+04:00'),
+  ('kpi_006', 'prj_004', NULL, 'Chefs Distinguished',
+   'Total number of chefs who have received the MACC distinction.',
+   'project', 20.00, 0.00, 'chefs',
+   '2026-03-05T10:00:00+04:00', '2026-06-20T10:00:00+04:00'),
+  ('kpi_007', 'prj_005', NULL, 'Online Views Target',
+   'Cumulative views across all platforms for Cooking Talent episodes.',
+   'project', 500000.00, 0.00, 'views',
+   '2026-04-12T09:00:00+04:00', '2026-06-01T09:00:00+04:00'),
+  ('kpi_008', 'prj_006', NULL, 'International Participants',
+   'Number of international chefs and food artisans participating in the festival.',
+   'project', 30.00, 0.00, 'participants',
+   '2026-05-20T08:00:00+04:00', '2026-06-15T08:00:00+04:00'),
+  ('kpi_009', 'prj_003', NULL, 'Certification Cost Efficiency',
+   'Average cost per restaurant certification including audit and labelling.',
+   'financial', 15000.00, 18500.00, 'MUR per restaurant',
+   '2025-10-20T08:00:00+04:00', '2026-07-10T08:00:00+04:00'),
+  ('kpi_010', 'prj_001', NULL, 'Budget Utilization Rate',
+   'Percentage of approved budget spent to date against the project timeline.',
+   'financial', 95.00, 31.67, '%',
+   '2025-10-15T08:00:00+04:00', '2026-07-01T08:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+-- ============================================================================
+-- 15. TASKS (26)
+-- ============================================================================
+
+INSERT INTO tasks (id, project_id, phase_id, meeting_id, assigned_to, title, description, status, priority, due_date, tags, dependencies, created_by, created_at, updated_at)
+VALUES
+  -- Food Titan Challenge: 6 tasks
+  ('tsk_001', 'prj_001', 'ph_001', NULL, 'usr_002',
+   'Finalise Show Format Bible',
+   'Complete the definitive format document for the Food Titan Challenge including episode structure, challenge types, scoring criteria, and judge guidelines.',
+   'done', 'high', '2026-02-15',
+   ARRAY['format', 'planning'],
+   ARRAY[]::text[], 'usr_002',
+   '2026-01-05T08:00:00+04:00', '2026-02-14T17:00:00+04:00'),
+  ('tsk_002', 'prj_001', 'ph_001', NULL, 'usr_002',
+   'Recruit Judges Panel',
+   'Identify and confirm a panel of three judges including one international guest judge for the Food Titan Challenge.',
+   'done', 'high', '2026-03-01',
+   ARRAY['casting', 'judges'],
+   ARRAY['tsk_001'], 'usr_002',
+   '2026-01-10T08:00:00+04:00', '2026-02-28T14:00:00+04:00'),
+  ('tsk_003', 'prj_001', 'ph_002', NULL, 'usr_006',
+   'Secure Studio Venue',
+   'Finalise the studio construction site at MBC Ebene and coordinate with the build team for set installation.',
+   'in_progress', 'critical', '2026-05-15',
+   ARRAY['studio', 'logistics'],
+   ARRAY['tsk_001'], 'usr_002',
+   '2026-02-01T08:00:00+04:00', '2026-04-10T09:00:00+04:00'),
+  ('tsk_004', 'prj_001', 'ph_001', NULL, 'usr_003',
+   'Cast Contestants',
+   'Run open casting calls across Mauritius, evaluate auditions, and finalise the 12 contestant shortlist.',
+   'done', 'high', '2026-03-15',
+   ARRAY['casting', 'contestants'],
+   ARRAY['tsk_002'], 'usr_003',
+   '2026-02-01T08:00:00+04:00', '2026-03-12T14:00:00+04:00'),
+  ('tsk_005', 'prj_001', 'ph_002', 'mtg_001', 'usr_002',
+   'Produce Pilot Episode',
+   'Film the pilot episode with shortlisted contestants, obtain stakeholder feedback, and refine the production workflow.',
+   'in_progress', 'high', '2026-06-01',
+   ARRAY['production', 'filming'],
+   ARRAY['tsk_003', 'tsk_004'], 'usr_002',
+   '2026-03-15T08:00:00+04:00', '2026-05-20T10:00:00+04:00'),
+  ('tsk_006', 'prj_001', NULL, 'mtg_002', 'usr_007',
+   'Develop Sponsorship Deck',
+   'Create a compelling sponsorship proposal document with tiered packages, audience demographics, and ROI projections.',
+   'review', 'medium', '2026-04-01',
+   ARRAY['sponsorship', 'marketing'],
+   ARRAY[]::text[], 'usr_007',
+   '2026-03-01T08:00:00+04:00', '2026-03-28T16:00:00+04:00'),
+
+  -- Les Innovations Gourmandes: 4 tasks
+  ('tsk_007', 'prj_002', 'ph_004', NULL, 'usr_003',
+   'Define Competition Categories',
+   'Establish the competition categories including best patisserie, best innovation, best use of local ingredients, and people choice award.',
+   'todo', 'high', '2026-09-15',
+   ARRAY['categories', 'planning'],
+   ARRAY[]::text[], 'usr_003',
+   '2026-06-15T09:00:00+04:00', '2026-06-15T09:00:00+04:00'),
+  ('tsk_008', 'prj_002', 'ph_004', NULL, 'usr_003',
+   'Recruit Jury Members',
+   'Identify and invite international and local patissiers to serve as jury members for the competition.',
+   'todo', 'high', '2026-10-01',
+   ARRAY['jury', 'selection'],
+   ARRAY['tsk_007'], 'usr_003',
+   '2026-06-15T09:00:00+04:00', '2026-06-15T09:00:00+04:00'),
+  ('tsk_009', 'prj_002', 'ph_005', NULL, 'usr_006',
+   'Design Competition Venue Layout',
+   'Plan the venue layout for the national finals including competition stations, audience seating, and media areas.',
+   'todo', 'medium', '2026-12-01',
+   ARRAY['venue', 'design'],
+   ARRAY[]::text[], 'usr_006',
+   '2026-06-15T09:00:00+04:00', '2026-06-15T09:00:00+04:00'),
+  ('tsk_010', 'prj_002', 'ph_004', NULL, 'usr_006',
+   'Create Marketing Materials',
+   'Design and produce promotional materials including posters, social media assets, and press releases.',
+   'todo', 'medium', '2026-09-01',
+   ARRAY['marketing', 'design'],
+   ARRAY[]::text[], 'usr_006',
+   '2026-06-15T09:00:00+04:00', '2026-06-15T09:00:00+04:00'),
+
+  -- Moris Otantik: 5 tasks
+  ('tsk_011', 'prj_003', 'ph_006', NULL, 'usr_003',
+   'Draft Quality Standards Document',
+   'Write the comprehensive Moris Otantik quality standards covering ingredient sourcing thresholds, audit criteria, and labelling requirements.',
+   'done', 'critical', '2026-01-31',
+   ARRAY['standards', 'documentation'],
+   ARRAY[]::text[], 'usr_003',
+   '2025-11-01T08:00:00+04:00', '2026-01-28T17:00:00+04:00'),
+  ('tsk_012', 'prj_003', 'ph_007', NULL, 'usr_009',
+   'Survey Local Ingredient Suppliers',
+   'Compile a comprehensive directory of local ingredient suppliers across Mauritius including pricing and availability data.',
+   'in_progress', 'high', '2026-08-31',
+   ARRAY['research', 'suppliers'],
+   ARRAY['tsk_011'], 'usr_003',
+   '2026-04-01T08:00:00+04:00', '2026-06-15T10:00:00+04:00'),
+  ('tsk_013', 'prj_003', 'ph_007', NULL, 'usr_004',
+   'Develop Certification Audit Checklist',
+   'Create a detailed audit checklist for on-site restaurant assessments, including ingredient traceability and compliance scoring.',
+   'done', 'high', '2026-05-15',
+   ARRAY['audit', 'checklist'],
+   ARRAY['tsk_011'], 'usr_004',
+   '2026-03-01T08:00:00+04:00', '2026-05-10T16:00:00+04:00'),
+  ('tsk_014', 'prj_003', 'ph_007', 'mtg_005', 'usr_009',
+   'Pilot with 10 Restaurants',
+   'Execute the pilot certification programme with 10 selected restaurants, conducting audits and issuing provisional certificates.',
+   'in_progress', 'critical', '2026-09-30',
+   ARRAY['pilot', 'certification'],
+   ARRAY['tsk_012', 'tsk_013'], 'usr_003',
+   '2026-05-15T08:00:00+04:00', '2026-06-20T15:00:00+04:00'),
+  ('tsk_015', 'prj_003', 'ph_008', NULL, 'usr_006',
+   'Launch National Awareness Campaign',
+   'Design and execute a nationwide marketing campaign to promote the Moris Otantik label to consumers and restaurants.',
+   'todo', 'high', '2027-03-01',
+   ARRAY['marketing', 'campaign'],
+   ARRAY['tsk_014'], 'usr_006',
+   '2026-04-01T08:00:00+04:00', '2026-04-01T08:00:00+04:00'),
+
+  -- MACC: 4 tasks
+  ('tsk_016', 'prj_004', 'ph_009', NULL, 'usr_002',
+   'Design Assessment Criteria',
+   'Define the MACC assessment criteria covering technical skill, Creole culinary heritage knowledge, innovation, and presentation.',
+   'todo', 'critical', '2026-10-31',
+   ARRAY['assessment', 'criteria'],
+   ARRAY[]::text[], 'usr_002',
+   '2026-07-05T10:00:00+04:00', '2026-07-05T10:00:00+04:00'),
+  ('tsk_017', 'prj_004', 'ph_009', NULL, 'usr_003',
+   'Nominate Candidate Chefs',
+   'Coordinate with culinary institutions and industry bodies to identify and nominate candidate chefs for the inaugural MACC distinction.',
+   'todo', 'high', '2026-11-30',
+   ARRAY['nominations', 'candidates'],
+   ARRAY['tsk_016'], 'usr_003',
+   '2026-07-05T10:00:00+04:00', '2026-07-05T10:00:00+04:00'),
+  ('tsk_018', 'prj_004', 'ph_009', NULL, 'usr_002',
+   'Organise Tasting Evaluation',
+   'Plan and execute the blind tasting evaluation sessions with the judging panel to assess candidate chefs.',
+   'todo', 'high', '2026-12-15',
+   ARRAY['evaluation', 'tasting'],
+   ARRAY['tsk_017'], 'usr_002',
+   '2026-07-05T10:00:00+04:00', '2026-07-05T10:00:00+04:00'),
+  ('tsk_019', 'prj_004', 'ph_010', 'mtg_006', 'usr_006',
+   'Plan Awards Ceremony',
+   'Organise the inaugural MACC awards ceremony including venue, invitations, media coverage, and programme of events.',
+   'todo', 'medium', '2027-01-31',
+   ARRAY['ceremony', 'events'],
+   ARRAY['tsk_018'], 'usr_006',
+   '2026-07-05T10:00:00+04:00', '2026-07-05T10:00:00+04:00'),
+
+  -- Cooking Talent: 4 tasks
+  ('tsk_020', 'prj_005', 'ph_011', 'mtg_007', 'usr_006',
+   'Develop Show Concept Document',
+   'Write the comprehensive show concept including episode format, mentor structure, elimination mechanics, and digital engagement strategy.',
+   'todo', 'high', '2027-02-15',
+   ARRAY['concept', 'format'],
+   ARRAY[]::text[], 'usr_006',
+   '2026-06-01T09:00:00+04:00', '2026-06-01T09:00:00+04:00'),
+  ('tsk_021', 'prj_005', 'ph_011', NULL, 'usr_006',
+   'Design Kitchen Set',
+   'Conceptualise and design the kitchen studio set for filming including workstations, camera angles, and lighting.',
+   'todo', 'medium', '2027-03-01',
+   ARRAY['design', 'set'],
+   ARRAY['tsk_020'], 'usr_006',
+   '2026-06-01T09:00:00+04:00', '2026-06-01T09:00:00+04:00'),
+  ('tsk_022', 'prj_005', 'ph_011', NULL, 'usr_003',
+   'Recruit Host and Presenter',
+   'Identify and confirm a charismatic host with culinary credentials for the Cooking Talent show.',
+   'todo', 'high', '2027-02-28',
+   ARRAY['host', 'casting'],
+   ARRAY[]::text[], 'usr_003',
+   '2026-06-01T09:00:00+04:00', '2026-06-01T09:00:00+04:00'),
+  ('tsk_023', 'prj_005', 'ph_011', NULL, 'usr_006',
+   'Produce Pilot Episode',
+   'Film a pilot episode with test contestants to validate the format, production workflow, and audience appeal.',
+   'todo', 'high', '2027-03-31',
+   ARRAY['production', 'pilot'],
+   ARRAY['tsk_020', 'tsk_021', 'tsk_022'], 'usr_006',
+   '2026-06-01T09:00:00+04:00', '2026-06-01T09:00:00+04:00'),
+
+  -- Festival: 3 tasks
+  ('tsk_024', 'prj_006', 'ph_013', 'mtg_008', 'usr_003',
+   'Select Festival Venue',
+   'Evaluate and select the optimal venue for the international food festival considering capacity, facilities, and accessibility.',
+   'todo', 'critical', '2027-01-15',
+   ARRAY['venue', 'selection'],
+   ARRAY[]::text[], 'usr_003',
+   '2026-06-01T08:00:00+04:00', '2026-06-01T08:00:00+04:00'),
+  ('tsk_025', 'prj_006', 'ph_013', NULL, 'usr_003',
+   'Invite International Chefs',
+   'Compile a target list of international chefs and food artisans, send formal invitations, and manage confirmations.',
+   'todo', 'high', '2027-02-01',
+   ARRAY['invitations', 'international'],
+   ARRAY['tsk_024'], 'usr_003',
+   '2026-06-01T08:00:00+04:00', '2026-06-01T08:00:00+04:00'),
+  ('tsk_026', 'prj_006', 'ph_013', NULL, 'usr_006',
+   'Design Festival Programme',
+   'Create the full festival programme including cooking demonstrations, panel discussions, tastings, and entertainment schedule.',
+   'todo', 'medium', '2027-03-15',
+   ARRAY['programme', 'design'],
+   ARRAY['tsk_024', 'tsk_025'], 'usr_006',
+   '2026-06-01T08:00:00+04:00', '2026-06-01T08:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+-- ============================================================================
+-- 16. MEETING REPORTS (6)
+-- ============================================================================
+
+INSERT INTO meeting_reports (id, meeting_id, title, content, created_by, created_at, updated_at)
+VALUES
+  ('mrep_001', 'mtg_001', 'Food Titan Kickoff - Minutes',
+E'# Meeting Minutes: Food Titan Kickoff\n\n## Attendees\n- Chef Arvin Ramdin (Chair)\n- Priya Nundlah\n- David Tran Quang\n- Chef Stephane Zavatone (Consultant)\n\n## Agenda\n1. Project overview and timeline review\n2. Budget allocation and spend plan\n3. Role assignments and responsibilities\n4. Key risks and mitigation strategies\n\n## Key Decisions\n- MBC confirmed as exclusive broadcast partner\n- Studio construction to begin March 2026 at MBC Ebene\n- 12 contestants to be cast for the inaugural season\n\n## Action Items\n- Arvin to finalise judge shortlist by Feb 2026\n- David to prepare media kit and sponsorship deck\n- Priya to coordinate MBC studio access agreement\n- Stephane to design competition challenge framework',
+   'usr_003', '2026-01-15T14:00:00+04:00', '2026-01-15T14:00:00+04:00'),
+
+  ('mrep_002', 'mtg_002', 'Sponsorship Strategy Review - Minutes',
+E'# Meeting Minutes: Sponsorship Strategy Review\n\n## Attendees\n- Chef Arvin Ramdin (Chair)\n- Anusha Bheekhoo\n- David Tran Quang\n- Fatima Lollmahamad (Consultant)\n\n## Agenda\n1. Sponsorship tier structure review\n2. Target sponsor list and outreach plan\n3. Revenue projections and targets\n4. Brand partnership guidelines\n\n## Key Decisions\n- Three-tier sponsorship model: Title Sponsor, Category Sponsors, Supporting Partners\n- Title sponsorship target: MUR 3 million\n- Outreach to LUX*, Air Mauritius, and Sun Resorts prioritised\n\n## Action Items\n- Fatima to finalise sponsorship deck v2 by April 2026\n- Anusha to prepare financial projections for each tier\n- David to draft partnership proposal letters\n- Arvin to personally approach LUX* and Air Mauritius contacts',
+   'usr_003', '2026-03-20T17:00:00+04:00', '2026-03-20T17:00:00+04:00'),
+
+  ('mrep_003', 'mtg_004', 'Moris Otantik Standards Review - Minutes',
+E'# Meeting Minutes: Moris Otantik Standards Review\n\n## Attendees\n- Priya Nundlah (Chair)\n- Jean-Michel Rivet\n- Dr. Anjali Deerpalsingh (Consultant)\n- Marie-Claire Hoarau\n\n## Agenda\n1. Review of draft quality standards v3\n2. Local ingredient threshold discussion\n3. Audit criteria and methodology\n4. Government endorsement timeline\n\n## Key Decisions\n- 80% local ingredient threshold confirmed as the certification standard\n- Three-year certification cycle with annual audits\n- Mauritius Standards Bureau to be engaged for standards accreditation\n\n## Action Items\n- Anjali to revise standards document incorporating feedback\n- Jean-Michel to initiate MSB engagement\n- Marie-Claire to begin restaurant identification for pilot\n- Priya to schedule Ministry of Tourism briefing',
+   'usr_003', '2025-12-05T15:00:00+04:00', '2025-12-05T15:00:00+04:00'),
+
+  ('mrep_004', 'mtg_005', 'Certification Pilot Progress - Minutes',
+E'# Meeting Minutes: Certification Pilot Progress Review\n\n## Attendees\n- Priya Nundlah (Chair)\n- Dr. Anjali Deerpalsingh (Consultant)\n- Marie-Claire Hoarau\n- Rajesh Doorgakant\n\n## Agenda\n1. Pilot certification progress report\n2. Audit findings and compliance rates\n3. Local ingredient supply chain updates\n4. Challenges and course corrections\n\n## Key Decisions\n- 10 restaurants now certified, exceeding initial target of 8\n- Average local ingredient compliance at 72%, on track for 80% goal\n- Supply directory to be published by Q4 2026\n\n## Action Items\n- Anjali to prepare compliance report for MSB\n- Marie-Claire to identify next batch of 15 restaurants\n- Rajesh to engage agricultural cooperatives for supply chain\n- Priya to brief the Founding Committee on progress',
+   'usr_003', '2026-05-15T13:00:00+04:00', '2026-05-15T13:00:00+04:00'),
+
+  ('mrep_005', 'mtg_006', 'MACC Curriculum Workshop - Minutes',
+E'# Meeting Minutes: MACC Curriculum Workshop\n\n## Attendees\n- Priya Nundlah (Chair)\n- Jean-Michel Rivet\n- Marco Di Napoli (Consultant)\n- Marie-Claire Hoarau\n\n## Agenda\n1. MACC assessment framework design\n2. Evaluation criteria and scoring methodology\n3. Nomination process and eligibility\n4. Inaugural ceremony planning\n\n## Key Decisions\n- Assessment to cover four pillars: Technical Skill, Heritage Knowledge, Innovation, Presentation\n- Each pillar scored on a 25-point scale, total 100 points minimum for distinction\n- Nomination open to chefs with 10+ years Creole cuisine experience\n\n## Action Items\n- Marco to draft detailed assessment rubric by September 2026\n- Jean-Michel to establish nomination committee\n- Marie-Claire to coordinate with Ecole Hoteliere for nominations\n- Priya to begin venue scouting for inaugural ceremony',
+   'usr_003', '2026-07-01T14:00:00+04:00', '2026-07-01T14:00:00+04:00'),
+
+  ('mrep_006', 'mtg_008', 'Festival Initial Planning - Minutes',
+E'# Meeting Minutes: Festival Initial Planning\n\n## Attendees\n- Priya Nundlah (Chair)\n- Jean-Michel Rivet\n- David Tran Quang\n- Hiroshi Tanaka (Consultant)\n\n## Agenda\n1. Festival concept and vision alignment\n2. Venue options and capacity planning\n3. International partnership strategy\n4. Preliminary budget and timeline\n\n## Key Decisions\n- Annual festival format, first edition targeted for May 2027\n- Venue shortlist: Grand Baie, Ebene, and Poste de Flacq\n- Hiroshi to leverage Asian culinary network for international participation\n- Air Mauritius to be approached for travel sponsorships\n\n## Action Items\n- Hiroshi to prepare international chef invitation list\n- David to create festival branding concept\n- Jean-Michel to compile venue comparison report\n- Priya to prepare budget proposal for Founding Committee review',
+   'usr_003', '2026-09-10T13:00:00+04:00', '2026-09-10T13:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- 17. DECISIONS (11)
+-- ============================================================================
+
+INSERT INTO decisions (id, project_id, meeting_id, title, description, impact, decided_at, decided_by, status, created_at, updated_at)
+VALUES
+  ('dec_001', 'prj_001', 'mtg_001', 'Adopt Reality TV Format for Food Titan',
+   'Approved the 12-episode reality competition format with weekly eliminations, judged by a panel of three chefs.',
+   'critical', '2026-01-15T11:30:00+04:00', 'usr_002', 'implemented',
+   '2026-01-15T11:30:00+04:00', '2026-01-15T11:30:00+04:00'),
+  ('dec_002', 'prj_001', 'mtg_002', 'MBC as Exclusive Broadcast Partner',
+   'Confirmed MBC Television as the exclusive broadcast partner with a 12-episode prime-time slot and digital streaming rights.',
+   'high', '2026-03-20T15:30:00+04:00', 'usr_002', 'implemented',
+   '2026-03-20T15:30:00+04:00', '2026-03-20T15:30:00+04:00'),
+  ('dec_003', 'prj_001', 'mtg_002', 'Budget Allocation for Studio Construction',
+   'Approved MUR 3.5 million for studio construction and set design at MBC Ebene, to be drawn from the approved project budget.',
+   'high', '2026-03-20T16:00:00+04:00', 'usr_007', 'implemented',
+   '2026-03-20T16:00:00+04:00', '2026-03-20T16:00:00+04:00'),
+  ('dec_004', 'prj_002', 'mtg_003', 'Three-Tier Competition Structure',
+   'Established the competition structure with regional selections, national semi-finals, and a live national finals event.',
+   'high', '2026-06-10T11:00:00+04:00', 'usr_003', 'approved',
+   '2026-06-10T11:00:00+04:00', '2026-06-10T11:00:00+04:00'),
+  ('dec_005', 'prj_002', 'mtg_003', 'Partnership with Mauritius Chefs Association',
+   'Formalised the partnership with the Mauritius Chefs Association for jury selection, venue support, and industry promotion.',
+   'medium', '2026-06-10T11:30:00+04:00', 'usr_003', 'approved',
+   '2026-06-10T11:30:00+04:00', '2026-06-10T11:30:00+04:00'),
+  ('dec_006', 'prj_003', 'mtg_004', '80 Percent Local Ingredient Threshold',
+   'Confirmed the minimum 80% local ingredient threshold as the core certification standard for the Moris Otantik label.',
+   'critical', '2025-12-05T12:00:00+04:00', 'usr_003', 'implemented',
+   '2025-12-05T12:00:00+04:00', '2025-12-05T12:00:00+04:00'),
+  ('dec_007', 'prj_003', 'mtg_004', 'Three-Year Certification Cycle',
+   'Adopted a three-year certification cycle with annual compliance audits and a full re-certification at cycle end.',
+   'high', '2025-12-05T12:30:00+04:00', 'usr_003', 'implemented',
+   '2025-12-05T12:30:00+04:00', '2025-12-05T12:30:00+04:00'),
+  ('dec_008', 'prj_003', 'mtg_005', 'Ministry of Tourism Co-Branding',
+   'Approved co-branding of the Moris Otantik label with the Ministry of Tourism to enhance credibility and consumer trust.',
+   'medium', '2026-05-15T11:30:00+04:00', 'usr_003', 'approved',
+   '2026-05-15T11:30:00+04:00', '2026-05-15T11:30:00+04:00'),
+  ('dec_009', 'prj_004', 'mtg_006', 'Annual Distinction with Biennial Reassessment',
+   'MACC distinction awarded annually with chefs required to undergo reassessment every two years to maintain the distinction.',
+   'medium', '2026-07-01T13:00:00+04:00', 'usr_002', 'approved',
+   '2026-07-01T13:00:00+04:00', '2026-07-01T13:00:00+04:00'),
+  ('dec_010', 'prj_005', 'mtg_007', 'Dual TV and Online Platform Distribution',
+   'Approved a dual distribution strategy with linear TV broadcast supplemented by online streaming for full episodes and behind-the-scenes content.',
+   'high', '2026-08-20T11:30:00+04:00', 'usr_006', 'proposed',
+   '2026-08-20T11:30:00+04:00', '2026-08-20T11:30:00+04:00'),
+  ('dec_011', 'prj_006', 'mtg_008', 'Annual International Festival Format',
+   'Approved the concept of an annual international food festival with a three-day format, targeting 30 international participants.',
+   'medium', '2026-09-10T12:00:00+04:00', 'usr_003', 'proposed',
+   '2026-09-10T12:00:00+04:00', '2026-09-10T12:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+-- ============================================================================
+-- 18. DOCUMENTS (9)
+-- ============================================================================
+
+INSERT INTO documents (id, project_id, meeting_id, name, type, file_url, file_size, mime_type, uploaded_by, summary, tags, version, created_at, updated_at)
+VALUES
+  ('doc_001', 'prj_001', NULL, 'Food Titan Format Bible',
+   'specification', '/documents/food-titan-format-bible.pdf', 2850000, 'application/pdf',
+   'usr_002',
+   'The definitive format document for the Food Titan Challenge covering episode structure, challenge types, scoring criteria, and judge guidelines.',
+   ARRAY['format', 'specification', 'production'], '2.1',
+   '2026-02-14T17:00:00+04:00', '2026-02-14T17:00:00+04:00'),
+  ('doc_002', 'prj_001', 'mtg_002', 'Sponsorship Deck 2026',
+   'presentation', '/documents/sponsorship-deck-2026.pdf', 5200000, 'application/pdf',
+   'usr_007',
+   'Corporate sponsorship proposal with tiered packages (Title, Category, Supporting), audience demographics, and ROI projections.',
+   ARRAY['sponsorship', 'marketing', 'revenue'], '1.3',
+   '2026-03-28T16:00:00+04:00', '2026-03-28T16:00:00+04:00'),
+  ('doc_003', 'prj_002', 'mtg_003', 'Competition Rules and Guidelines',
+   'policy', '/documents/competitions-rules-guidelines.pdf', 1200000, 'application/pdf',
+   'usr_003',
+   'Official competition rules and guidelines for Les Innovations Gourmandes covering eligibility, judging criteria, and submission requirements.',
+   ARRAY['rules', 'guidelines', 'competition'], '1.0',
+   '2026-06-10T11:00:00+04:00', '2026-06-10T11:00:00+04:00'),
+  ('doc_004', 'prj_003', 'mtg_004', 'Moris Otantik Quality Standards',
+   'specification', '/documents/moris-otantik-standards.pdf', 3400000, 'application/pdf',
+   'usr_003',
+   'Comprehensive quality standards document defining the 80% local ingredient threshold, certification criteria, audit methodology, and labelling requirements.',
+   ARRAY['standards', 'quality', 'certification'], '3.0',
+   '2025-12-05T15:00:00+04:00', '2025-12-05T15:00:00+04:00'),
+  ('doc_005', 'prj_003', 'mtg_005', 'Certification Audit Checklist',
+   'guide', '/documents/certification-audit-checklist.xlsx', 850000, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+   'usr_004',
+   'Detailed on-site audit checklist for restaurant assessments including ingredient traceability, compliance scoring, and corrective action tracking.',
+   ARRAY['audit', 'checklist', 'assessment'], '2.0',
+   '2026-05-10T16:00:00+04:00', '2026-05-10T16:00:00+04:00'),
+  ('doc_006', 'prj_004', 'mtg_006', 'MACC Assessment Framework',
+   'specification', '/documents/macc-assessment-framework.pdf', 1900000, 'application/pdf',
+   'usr_002',
+   'The MACC assessment framework defining the four evaluation pillars (Technical Skill, Heritage Knowledge, Innovation, Presentation) and scoring methodology.',
+   ARRAY['assessment', 'framework', 'criteria'], '1.0',
+   '2026-07-01T14:00:00+04:00', '2026-07-01T14:00:00+04:00'),
+  ('doc_007', 'prj_005', 'mtg_007', 'Cooking Talent Show Concept',
+   'specification', '/documents/cooking-talent-concept.pdf', 4100000, 'application/pdf',
+   'usr_006',
+   'Show concept document for Cooking Talent including episode format, mentor structure, elimination mechanics, and digital engagement strategy.',
+   ARRAY['concept', 'format', 'show-design'], '1.0',
+   '2026-08-20T11:30:00+04:00', '2026-08-20T11:30:00+04:00'),
+  ('doc_008', 'prj_006', 'mtg_008', 'Festival Prospectus',
+   'report', '/documents/festival-prospectus.pdf', 6500000, 'application/pdf',
+   'usr_003',
+   'Festival prospectus outlining the vision, format, venue options, international partnership opportunities, and preliminary budget for Le Festival International Des Saveurs.',
+   ARRAY['prospectus', 'festival', 'planning'], '1.0',
+   '2026-09-10T13:00:00+04:00', '2026-09-10T13:00:00+04:00'),
+  ('doc_009', 'prj_003', NULL, 'Local Ingredient Directory',
+   'reference', '/documents/local-ingredient-directory.xlsx', 1500000, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+   'usr_009',
+   'Comprehensive directory of local ingredient suppliers across Mauritius with product categories, pricing, and seasonal availability data.',
+   ARRAY['directory', 'suppliers', 'local-ingredients'], '1.2',
+   '2026-06-15T10:00:00+04:00', '2026-06-15T10:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- 19. RISKS (11)
+-- ============================================================================
+
+INSERT INTO risks (id, project_id, meeting_id, title, description, category, severity, probability, status, mitigation, owner, identified_at, created_at, updated_at)
+VALUES
+  ('ris_001', 'prj_001', NULL,
+   'Insufficient Sponsorship Revenue',
+   'Risk that corporate sponsorship targets are not met, leading to budget shortfalls that could impact production quality.',
+   'financial', 'high', 'medium', 'monitoring',
+   'Diversify sponsorship tiers, engage multiple category sponsors, and establish a contingency fund from operational savings.',
+   'usr_007', '2026-01-15T10:00:00+04:00',
+   '2026-01-15T10:00:00+04:00', '2026-03-20T16:00:00+04:00'),
+  ('ris_002', 'prj_001', NULL,
+   'Key Contestant Dropouts',
+   'Risk that popular or skilled contestants withdraw during production, impacting audience engagement and narrative quality.',
+   'operational', 'medium', 'medium', 'identified',
+   'Maintain a reserve list of 4 alternates from the casting process. Ensure contestant contracts include commitment clauses.',
+   'usr_002', '2026-02-01T08:00:00+04:00',
+   '2026-02-01T08:00:00+04:00', '2026-02-01T08:00:00+04:00'),
+  ('ris_003', 'prj_001', NULL,
+   'Studio Construction Delays',
+   'Risk that studio set construction at MBC Ebene is delayed, compressing the production timeline and increasing costs.',
+   'operational', 'high', 'medium', 'monitoring',
+   'Engage construction firm early, establish milestone-based payments, and identify backup studio locations.',
+   'usr_006', '2026-02-01T08:00:00+04:00',
+   '2026-02-01T08:00:00+04:00', '2026-04-10T09:00:00+04:00'),
+  ('ris_004', 'prj_002', NULL,
+   'Low Competition Entries',
+   'Risk that insufficient entries are received, reducing the competitive quality and public interest in the event.',
+   'operational', 'medium', 'low', 'identified',
+   'Launch early marketing campaign, partner with culinary schools, and extend the submission deadline if needed.',
+   'usr_003', '2026-06-10T09:00:00+04:00',
+   '2026-06-10T09:00:00+04:00', '2026-06-10T09:00:00+04:00'),
+  ('ris_005', 'prj_002', NULL,
+   'Jury Availability Conflicts',
+   'Risk that confirmed international jury members become unavailable due to scheduling conflicts or travel restrictions.',
+   'operational', 'medium', 'low', 'identified',
+   'Confirm jury availability well in advance, maintain a backup jury list, and use video conferencing as a contingency.',
+   'usr_003', '2026-06-10T09:00:00+04:00',
+   '2026-06-10T09:00:00+04:00', '2026-06-10T09:00:00+04:00'),
+  ('ris_006', 'prj_003', NULL,
+   'Restaurant Adoption Resistance',
+   'Risk that restaurants resist adopting the certification due to perceived cost, complexity, or scepticism about consumer demand.',
+   'reputational', 'high', 'high', 'monitoring',
+   'Conduct awareness workshops, offer subsidised initial certifications, and showcase early adopter success stories.',
+   'usr_009', '2025-12-05T10:00:00+04:00',
+   '2025-12-05T10:00:00+04:00', '2026-05-15T13:00:00+04:00'),
+  ('ris_007', 'prj_003', NULL,
+   'Supply Chain Gaps for Local Ingredients',
+   'Risk that local ingredient suppliers cannot consistently meet the volume and quality requirements for certified restaurants.',
+   'operational', 'high', 'medium', 'monitoring',
+   'Map supply chains early, engage agricultural cooperatives, and develop seasonal availability forecasts.',
+   'usr_009', '2026-04-01T08:00:00+04:00',
+   '2026-04-01T08:00:00+04:00', '2026-06-15T10:00:00+04:00'),
+  ('ris_008', 'prj_003', NULL,
+   'Government Policy Changes',
+   'Risk that changes in government policy or ministry leadership affect the endorsement and co-branding of the Moris Otantik label.',
+   'regulatory', 'medium', 'low', 'identified',
+   'Maintain strong relationships across political parties, document all agreements formally, and diversify institutional partnerships.',
+   'usr_004', '2025-12-05T10:00:00+04:00',
+   '2025-12-05T10:00:00+04:00', '2025-12-05T10:00:00+04:00'),
+  ('ris_009', 'prj_004', NULL,
+   'Insufficient Nominations',
+   'Risk that an insufficient number of qualified chefs are nominated for the inaugural MACC distinction, undermining the prestige of the programme.',
+   'reputational', 'medium', 'medium', 'identified',
+   'Engage culinary institutions early, open nominations to public, and extend the nomination window if needed.',
+   'usr_002', '2026-07-05T10:00:00+04:00',
+   '2026-07-05T10:00:00+04:00', '2026-07-05T10:00:00+04:00'),
+  ('ris_010', 'prj_005', NULL,
+   'Host and Presenter Unavailability',
+   'Risk that a suitable host with the right combination of culinary expertise and on-camera charisma cannot be secured.',
+   'operational', 'medium', 'medium', 'identified',
+   'Begin host recruitment early, consider multiple candidates, and engage a talent agency with food entertainment experience.',
+   'usr_003', '2026-06-01T09:00:00+04:00',
+   '2026-06-01T09:00:00+04:00', '2026-06-01T09:00:00+04:00'),
+  ('ris_011', 'prj_006', NULL,
+   'International Travel Restrictions',
+   'Risk that international travel restrictions prevent visiting chefs and participants from attending the festival.',
+   'logistical', 'high', 'low', 'identified',
+   'Develop hybrid festival format with virtual participation options, maintain flexible booking policies, and secure comprehensive event insurance.',
+   'usr_003', '2026-06-01T08:00:00+04:00',
+   '2026-06-01T08:00:00+04:00', '2026-06-01T08:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- 20. COST ITEMS (9)
+-- ============================================================================
+
+INSERT INTO cost_items (id, project_id, phase_id, meeting_id, name, description, category, unit_cost, quantity, currency, vendor, status, created_at, updated_at)
+VALUES
+  ('ci_001', 'prj_001', 'ph_002', NULL,
+   'Studio Rental and Construction',
+   'Rental and custom construction of the Food Titan studio set at MBC Ebene including lighting rig and kitchen stations.',
+   'venue', 250000.00, 20, 'MUR', 'MBC Television Production',
+   'approved', '2026-02-15T08:00:00+04:00', '2026-03-20T16:00:00+04:00'),
+  ('ci_002', 'prj_001', 'ph_002', NULL,
+   'Camera Equipment Hire',
+   'Professional multi-camera setup for filming including 4K cameras, audio equipment, and monitoring systems.',
+   'equipment', 150000.00, 4, 'MUR', 'MBC Television Production',
+   'approved', '2026-02-15T08:00:00+04:00', '2026-03-20T16:00:00+04:00'),
+  ('ci_003', 'prj_001', 'ph_003', NULL,
+   'Contestant Prizes',
+   'Prize money and awards for the top 12 contestants including the grand prize for the Food Titan champion.',
+   'awards', 500000.00, 12, 'MUR', 'Altivex',
+   'pending', '2026-01-15T08:00:00+04:00', '2026-01-15T08:00:00+04:00'),
+  ('ci_004', 'prj_002', 'ph_005', NULL,
+   'National Finals Venue Hire',
+   'Venue rental for the three-day national finals event including main hall, preparation areas, and audience seating.',
+   'venue', 180000.00, 3, 'MUR', 'Mauritius Convention Centre',
+   'pending', '2026-06-15T09:00:00+04:00', '2026-06-15T09:00:00+04:00'),
+  ('ci_005', 'prj_002', 'ph_005', NULL,
+   'Competition Ingredients Budget',
+   'Premium ingredients and specialty items for all competition stations during the national finals.',
+   'materials', 75000.00, 20, 'MUR', 'Various Suppliers',
+   'pending', '2026-06-15T09:00:00+04:00', '2026-06-15T09:00:00+04:00'),
+  ('ci_006', 'prj_003', 'ph_007', NULL,
+   'Audit Team Deployment',
+   'Cost of deploying audit teams to restaurants across Mauritius for on-site certification assessments.',
+   'personnel', 25000.00, 50, 'MUR', 'National Food Laboratory',
+   'approved', '2026-04-01T08:00:00+04:00', '2026-04-01T08:00:00+04:00'),
+  ('ci_007', 'prj_003', 'ph_008', NULL,
+   'Label Printing and Signage',
+   'Production of Moris Otantik certification labels, window stickers, and promotional signage for certified restaurants.',
+   'materials', 800.00, 2000, 'MUR', 'Mauritius Printers Ltd',
+   'pending', '2026-04-01T08:00:00+04:00', '2026-04-01T08:00:00+04:00'),
+  ('ci_008', 'prj_004', 'ph_010', NULL,
+   'Ceremony Venue and Catering',
+   'Venue hire, catering, and event production for the inaugural MACC awards ceremony.',
+   'catering', 850000.00, 1, 'MUR', 'Hotel and Spa Saint Geran',
+   'pending', '2026-07-05T10:00:00+04:00', '2026-07-05T10:00:00+04:00'),
+  ('ci_009', 'prj_006', 'ph_013', NULL,
+   'International Chef Travel and Accommodation',
+   'Travel, accommodation, and hospitality for 15 international chefs and food artisans attending the festival.',
+   'travel', 120000.00, 15, 'MUR', 'Air Mauritius',
+   'pending', '2026-06-01T08:00:00+04:00', '2026-06-01T08:00:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- 21. NOTIFICATIONS (5)
+-- ============================================================================
+
+INSERT INTO notifications (id, user_id, type, category, title, body, entity_type, entity_id, read, sent_at, created_at)
+VALUES
+  ('noti_001', 'usr_003', 'assignment', 'task',
+   'Task Assigned: Draft Quality Standards Document',
+   'You have been assigned to the task "Draft Quality Standards Document" for the Moris Otantik project. Due by 31 January 2026.',
+   'task', 'tsk_011', true, '2025-11-01T08:05:00+04:00', '2025-11-01T08:05:00+04:00'),
+  ('noti_002', 'usr_002', 'meeting', 'meeting',
+   'Meeting Scheduled: Food Titan Kickoff Meeting',
+   'A new meeting "Food Titan Kickoff Meeting" has been scheduled for 15 January 2026 at 10:00 AM at Altivex Boardroom, Port Louis.',
+   'meeting', 'mtg_001', true, '2026-01-10T08:05:00+04:00', '2026-01-10T08:05:00+04:00'),
+  ('noti_003', 'usr_006', 'alert', 'risk',
+   'Risk Requires Review: Insufficient Sponsorship Revenue',
+   'The risk "Insufficient Sponsorship Revenue" for Food Titan Challenge has been updated and requires your review. Current status: monitoring.',
+   'risk', 'ris_001', false, '2026-03-20T16:05:00+04:00', '2026-03-20T16:05:00+04:00'),
+  ('noti_004', 'usr_007', 'approval', 'budget',
+   'Budget Approval Required: Moris Otantik Pilot Phase',
+   'Budget approval is required for the Moris Otantik pilot certification phase. Estimated spend: MUR 1,250,000 for audit team deployment and lab testing.',
+   'project', 'prj_003', false, '2026-04-01T08:10:00+04:00', '2026-04-01T08:10:00+04:00'),
+  ('noti_005', 'usr_009', 'info', 'decision',
+   'New Decision Recorded: Assessment Framework Approved',
+   'A new decision "Assessment Framework Approved" has been recorded for the MACC project. Impact: medium. Status: approved.',
+   'decision', 'dec_009', false, '2026-07-01T14:05:00+04:00', '2026-07-01T14:05:00+04:00')
+ON CONFLICT (id) DO NOTHING;
+
+COMMIT;

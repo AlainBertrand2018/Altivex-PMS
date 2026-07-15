@@ -1,13 +1,13 @@
 export type RiskSeverity = "critical" | "high" | "medium" | "low";
-export type RiskStatus = "identified" | "monitoring" | "mitigated" | "resolved" | "occurred";
-export type RiskCategory = "financial" | "technical" | "operational" | "legal" | "reputational" | "safety";
+export type RiskStatus = "identified" | "monitoring" | "mitigated" | "closed";
+export type RiskCategory = "operational" | "financial" | "legal" | "reputational" | "technical";
 
 export interface Risk {
   id: string;
-  title: string;
-  description: string;
   projectId: string;
   meetingId?: string;
+  title: string;
+  description: string;
   category: RiskCategory;
   severity: RiskSeverity;
   probability: RiskStatus;
@@ -17,13 +17,4 @@ export interface Risk {
   identifiedAt: string;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface ProjectIntelligence {
-  projectId: string;
-  healthScore: number;
-  risks: Risk[];
-  insights: string[];
-  recommendations: string[];
-  lastAnalyzed: string;
 }

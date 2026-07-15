@@ -19,11 +19,11 @@ export default function ProjectForm({ project, onSubmit, onCancel }: ProjectForm
   const [priority, setPriority] = useState<ProjectPriority>(project?.priority || "medium");
   const [committeeId, setCommitteeId] = useState(project?.committeeId || "");
   const [ownerId, setOwnerId] = useState(project?.ownerId || "");
-  const [estimatedBudget, setEstimatedBudget] = useState(project?.budget?.estimated?.toString() || "");
-  const [approvedBudget, setApprovedBudget] = useState(project?.budget?.approved?.toString() || "");
-  const [currency, setCurrency] = useState(project?.budget?.currency || "USD");
-  const [startDate, setStartDate] = useState(project?.timeline?.startDate || "");
-  const [endDate, setEndDate] = useState(project?.timeline?.endDate || "");
+  const [estimatedBudget, setEstimatedBudget] = useState(project?.budgetEstimated?.toString() || "");
+  const [approvedBudget, setApprovedBudget] = useState(project?.budgetApproved?.toString() || "");
+  const [currency, setCurrency] = useState(project?.budgetCurrency || "MUR");
+  const [startDate, setStartDate] = useState(project?.timelineStartDate || "");
+  const [endDate, setEndDate] = useState(project?.timelineEndDate || "");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,20 +34,13 @@ export default function ProjectForm({ project, onSubmit, onCancel }: ProjectForm
       priority,
       committeeId,
       ownerId,
-      budget: {
-        estimated: Number(estimatedBudget) || 0,
-        approved: Number(approvedBudget) || 0,
-        spent: project?.budget?.spent || 0,
-        currency,
-      },
-      timeline: {
-        startDate,
-        endDate,
-        milestones: project?.timeline?.milestones || [],
-      },
+      budgetEstimated: Number(estimatedBudget) || 0,
+      budgetApproved: Number(approvedBudget) || 0,
+      budgetSpent: project?.budgetSpent || 0,
+      budgetCurrency: currency,
+      timelineStartDate: startDate || undefined,
+      timelineEndDate: endDate || undefined,
       tags: project?.tags || [],
-      stakeholders: project?.stakeholders || [],
-      suppliers: project?.suppliers || [],
     });
   };
 
@@ -130,11 +123,10 @@ export default function ProjectForm({ project, onSubmit, onCancel }: ProjectForm
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Currency</label>
               <select value={currency} onChange={(e) => setCurrency(e.target.value)} className="w-full px-4 py-2.5 rounded-lg bg-background border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50">
+                <option value="MUR">MUR</option>
                 <option value="USD">USD</option>
-                <option value="NGN">NGN</option>
-                <option value="GHS">GHS</option>
-                <option value="ZAR">ZAR</option>
-                <option value="KES">KES</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
               </select>
             </div>
           </div>

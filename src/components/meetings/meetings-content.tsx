@@ -16,7 +16,7 @@ const statusColors: Record<string, string> = {
 };
 
 export default function MeetingsContent() {
-  const { meetings, projects, users, addMeeting, updateMeeting, deleteMeeting } = useApp();
+  const { meetings, projects, users, meetingAttendees, meetingReports, addMeeting, updateMeeting, deleteMeeting } = useApp();
   const [showForm, setShowForm] = useState(false);
   const [editingMeeting, setEditingMeeting] = useState<Meeting | null>(null);
 
@@ -51,10 +51,13 @@ export default function MeetingsContent() {
       <div className="space-y-4">
         {meetings.map((meeting) => {
           const project = projects.find((p) => p.id === meeting.projectId);
-          const attendees = meeting.attendees.map((a) => ({
-            ...a,
-            user: users.find((u) => u.id === a.userId),
-          }));
+          const attendees = meetingAttendees
+            .filter((a) => a.meetingId === meeting.id)
+            .map((a) => ({
+              ...a,
+              user: a.userId ? users.find((u) => u.id === a.userId) : undefined,
+            }));
+          const hasReport = meetingReports.some((r) => r.meetingId === meeting.id);
 
           return (
             <Card key={meeting.id} className="glass border-border/50 hover:border-primary/20 transition-all cursor-pointer group">
@@ -116,11 +119,8 @@ export default function MeetingsContent() {
                   </div>
 
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    {meeting.transcriptId && (
-                      <span className="flex items-center gap-1 text-emerald-400"><FileText className="w-3 h-3" /> Transcript</span>
-                    )}
-                    {meeting.minutesId && (
-                      <span className="flex items-center gap-1 text-primary"><FileText className="w-3 h-3" /> Minutes</span>
+                    {hasReport && (
+                      <span className="flex items-center gap-1 text-primary"><FileText className="w-3 h-3" /> Report</span>
                     )}
                   </div>
                 </div>

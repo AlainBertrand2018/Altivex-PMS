@@ -1,12 +1,12 @@
 export type DecisionStatus = "proposed" | "approved" | "rejected" | "deferred" | "implemented";
-export type DecisionImpact = "high" | "medium" | "low";
+export type DecisionImpact = "critical" | "high" | "medium" | "low";
 
 export interface Decision {
   id: string;
-  title: string;
-  description: string;
   projectId: string;
   meetingId: string;
+  title: string;
+  description: string;
   decidedBy: string[];
   status: DecisionStatus;
   impact: DecisionImpact;

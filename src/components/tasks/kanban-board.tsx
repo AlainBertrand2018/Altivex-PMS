@@ -82,6 +82,18 @@ const statusConfig: Record<TaskStatus, {
     badgeDark: "dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20",
     glow: "shadow-emerald-500/5 dark:shadow-emerald-500/5",
   },
+  blocked: {
+    label: "Blocked",
+    dot: "bg-red-500 dark:bg-red-500",
+    colBorder: "border-red-200 dark:border-red-500/20",
+    colBg: "bg-red-50/80 dark:bg-red-500/[0.03]",
+    cardBorder: "border-l-red-500 dark:border-l-red-500",
+    cardBg: "bg-white dark:bg-red-500/[0.04]",
+    cardBgDark: "dark:bg-red-500/[0.04]",
+    badge: "bg-red-100 text-red-600 border-red-200",
+    badgeDark: "dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20",
+    glow: "shadow-red-500/5 dark:shadow-red-500/5",
+  },
 };
 
 const priorityColors: Record<string, { light: string; dark: string }> = {
@@ -289,7 +301,7 @@ export default function KanbanBoard({ onCreateTask, onEditTask }: KanbanBoardPro
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="grid grid-cols-4 gap-4 min-h-[60vh]">
+      <div className="grid grid-cols-5 gap-4 min-h-[60vh]">
         {(Object.keys(statusConfig) as TaskStatus[]).map((statusId) => {
           const cfg = statusConfig[statusId];
           const columnTasks = tasks.filter((t) => t.status === statusId);

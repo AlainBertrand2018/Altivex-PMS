@@ -27,7 +27,7 @@ const priorityColors: Record<string, string> = {
 };
 
 export default function ProjectsContent() {
-  const { projects, committees, users, addProject, updateProject, deleteProject } = useApp();
+  const { projects, committees, users, milestones, stakeholders, addProject, updateProject, deleteProject } = useApp();
   const [showForm, setShowForm] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
 
@@ -73,11 +73,13 @@ export default function ProjectsContent() {
         {projects.map((project) => {
           const owner = users.find((u) => u.id === project.ownerId);
           const committee = committees.find((c) => c.id === project.committeeId);
-          const budgetProgress = project.budget.approved > 0
-            ? Math.round((project.budget.spent / project.budget.approved) * 100)
+          const budgetProgress = project.budgetApproved > 0
+            ? Math.round((project.budgetSpent / project.budgetApproved) * 100)
             : 0;
-          const completedMilestones = project.timeline.milestones.filter((m) => m.completed).length;
-          const totalMilestones = project.timeline.milestones.length;
+          const projectMilestones = milestones.filter((m) => m.projectId === project.id);
+          const completedMilestones = projectMilestones.filter((m) => m.completed).length;
+          const totalMilestones = projectMilestones.length;
+          const projectStakeholderCount = stakeholders.filter((s) => s.projectId === project.id).length;
 
           return (
             <Card key={project.id} className="glass border-border/50 hover:border-primary/20 transition-all cursor-pointer group">
@@ -117,14 +119,14 @@ export default function ProjectsContent() {
                   </div>
                   <Progress value={budgetProgress} className="h-1" />
                   <p className="text-[10px] text-muted-foreground">
-                    {project.budget.currency} {(project.budget.spent / 1000000).toFixed(1)}M / {(project.budget.approved / 1000000).toFixed(1)}M
+                    {project.budgetCurrency} {(project.budgetSpent / 1000000).toFixed(1)}M / {(project.budgetApproved / 1000000).toFixed(1)}M
                   </p>
                 </div>
 
                 <div className="flex items-center justify-between pt-2 border-t border-border/30">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Users className="w-3 h-3" />
-                    <span>{project.stakeholders.length} stakeholders</span>
+                    <span>{projectStakeholderCount} stakeholders</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Calendar className="w-3 h-3" />

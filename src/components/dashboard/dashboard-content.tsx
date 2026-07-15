@@ -68,8 +68,8 @@ export default function DashboardContent() {
           </CardHeader>
           <CardContent className="space-y-5">
             {projects.filter((p) => p.status === "in_progress").map((project) => {
-              const spent = project.budget.spent;
-              const approved = project.budget.approved;
+              const spent = project.budgetSpent;
+              const approved = project.budgetApproved;
               const progress = approved > 0 ? Math.round((spent / approved) * 100) : 0;
 
               return (
@@ -80,8 +80,8 @@ export default function DashboardContent() {
                   </div>
                   <Progress value={progress} className="h-1.5" />
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>{project.budget.currency} {(spent / 1000000).toFixed(1)}M spent</span>
-                    <span>{project.budget.currency} {(approved / 1000000).toFixed(1)}M approved</span>
+                    <span>{project.budgetCurrency} {(spent / 1000000).toFixed(1)}M spent</span>
+                    <span>{project.budgetCurrency} {(approved / 1000000).toFixed(1)}M approved</span>
                   </div>
                 </div>
               );
@@ -137,7 +137,7 @@ export default function DashboardContent() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {risks.filter((r) => r.status !== "resolved").map((risk) => (
+            {risks.filter((r) => r.status !== "closed").map((risk) => (
               <div key={risk.id} className="p-4 rounded-lg bg-muted/20 border border-border/30 space-y-2">
                 <div className="flex items-center gap-2">
                   <Badge

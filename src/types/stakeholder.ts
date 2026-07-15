@@ -1,18 +1,19 @@
 export type StakeholderCategory =
+  | "external"
   | "executive"
-  | "committee"
-  | "internal"
-  | "contractor"
-  | "supplier"
-  | "external";
+  | "government"
+  | "sponsor"
+  | "media"
+  | "academic";
 
 export type StakeholderInfluence = "high" | "medium" | "low";
 export type StakeholderInterest = "high" | "medium" | "low";
 
 export interface Stakeholder {
   id: string;
-  userId: string;
+  userId?: string;
   projectId: string;
+  name?: string;
   category: StakeholderCategory;
   influence: StakeholderInfluence;
   interest: StakeholderInterest;
