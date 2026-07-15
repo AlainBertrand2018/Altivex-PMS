@@ -368,8 +368,7 @@ export default function KanbanBoard({ onCreateTask, onEditTask, selectedProject 
                 </div>
                 <button
                   onClick={onCreateTask}
-                  disabled={!selectedProject && statusId === "todo"}
-                  className="p-1 rounded hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="p-1 rounded hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -388,8 +387,7 @@ export default function KanbanBoard({ onCreateTask, onEditTask, selectedProject 
                   ))}
                   <button
                     onClick={onCreateTask}
-                    disabled={!selectedProject && statusId === "todo"}
-                    className="w-full py-3 border-2 border-dashed border-outline-variant/10 rounded-xl text-on-surface-variant hover:border-primary/40 hover:text-primary transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="w-full py-3 border-2 border-dashed border-outline-variant/10 rounded-xl text-on-surface-variant hover:border-primary/40 hover:text-primary transition-all flex items-center justify-center gap-2 text-sm"
                   >
                     <Plus className="w-4 h-4" />
                     New Task

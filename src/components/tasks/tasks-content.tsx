@@ -79,8 +79,7 @@ export default function TasksContent() {
           </div>
           <button
             onClick={() => { setEditingTask(null); setShowForm(true); }}
-            disabled={!selectedProject}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-on-primary font-bold hover:brightness-110 transition-all shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-on-primary font-bold hover:brightness-110 transition-all shadow-lg shadow-primary/20"
           >
             <Plus className="w-4 h-4" />
             New Task
