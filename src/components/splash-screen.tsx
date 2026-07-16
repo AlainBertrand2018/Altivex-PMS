@@ -67,7 +67,7 @@ export default function SplashScreen() {
 
       {/* Cinematic Background */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-black/60 z-10" />
+        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm z-10" />
         <div
           ref={bgRef}
           className={`w-full h-full bg-cover bg-center ${c.background.enableZoom ? "animate-subtle-zoom" : ""}`}
