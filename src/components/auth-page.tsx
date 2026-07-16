@@ -41,7 +41,7 @@ export default function AuthPage() {
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background overflow-hidden">
       {/* Cinematic Background */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-black/60 z-10" />
+        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm z-10" />
         <div
           className="w-full h-full animate-subtle-zoom bg-cover bg-center"
           style={{ backgroundImage: `url('${splashContent.background.imageUrl}')` }}
